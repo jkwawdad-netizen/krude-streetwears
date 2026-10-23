@@ -1,0 +1,265 @@
+<div class="add-product-page">
+
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">KRŪDE STREETWEARS</p>
+      <h1>Add Product</h1>
+      <p class="subtitle">
+        Add a new item to your online store.
+      </p>
+    </div>
+
+```
+<a routerLink="/admin/dashboard" class="back-btn">
+  ← Back to Dashboard
+</a>
+```
+
+  </div>
+
+  <form
+    class="product-form"
+    (ngSubmit)="addProduct()"
+  >
+
+```
+<!-- IMAGE -->
+
+<section class="form-section">
+
+  <div class="section-heading">
+    <span>01</span>
+
+    <div>
+      <h2>Product Image</h2>
+      <p>Upload a clear image of the product.</p>
+    </div>
+  </div>
+
+  <label class="upload-box">
+
+    <input
+      type="file"
+      accept="image/*"
+      (change)="onFileSelected($event)"
+      hidden
+    />
+
+    <div class="upload-content">
+
+      <div class="upload-icon">
+        +
+      </div>
+
+      <strong>
+        {{ selectedFileName || 'Choose Product Image' }}
+      </strong>
+
+      <small>
+        JPG, PNG or WEBP
+      </small>
+
+    </div>
+
+  </label>
+
+</section>
+
+
+<!-- BASIC INFORMATION -->
+
+<section class="form-section">
+
+  <div class="section-heading">
+    <span>02</span>
+
+    <div>
+      <h2>Product Information</h2>
+      <p>Enter the basic details of your product.</p>
+    </div>
+  </div>
+
+
+  <div class="form-grid">
+
+    <div class="field full">
+      <label>Product Name</label>
+
+      <input
+        type="text"
+        name="name"
+        [(ngModel)]="product.name"
+        placeholder="e.g. Classic Oversized T-Shirt"
+        required
+      />
+    </div>
+
+
+    <div class="field">
+
+      <label>Category</label>
+
+      <select
+        name="category"
+        [(ngModel)]="product.category"
+        required
+      >
+
+        <option value="">
+          Select category
+        </option>
+
+        <option value="T-Shirts">
+          T-Shirts
+        </option>
+
+        <option value="Pants">
+          Pants
+        </option>
+
+        <option value="Jeans">
+          Jeans
+        </option>
+
+        <option value="Joggers">
+          Joggers
+        </option>
+
+        <option value="Vintage Tops">
+          Vintage Tops
+        </option>
+
+        <option value="Crocs">
+          Crocs
+        </option>
+
+        <option value="Sneakers">
+          Sneakers
+        </option>
+
+        <option value="Watches">
+          Watches
+        </option>
+
+        <option value="Ladies Dresses">
+          Ladies Dresses
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Price (GH₵)</label>
+
+      <input
+        type="number"
+        name="price"
+        [(ngModel)]="product.price"
+        min="0"
+        placeholder="0"
+        required
+      />
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Stock Quantity</label>
+
+      <input
+        type="number"
+        name="stock"
+        [(ngModel)]="product.stock"
+        min="0"
+        placeholder="0"
+        required
+      />
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Sizes</label>
+
+      <input
+        type="text"
+        name="sizes"
+        [(ngModel)]="sizesInput"
+        placeholder="e.g. M, L, XL"
+      />
+
+      <small class="hint">
+        Separate sizes with commas.
+      </small>
+
+    </div>
+
+
+    <div class="field full">
+
+      <label>Description</label>
+
+      <textarea
+        name="description"
+        [(ngModel)]="product.description"
+        rows="6"
+        placeholder="Describe the product..."
+      ></textarea>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ACTIONS -->
+
+<section class="form-actions">
+
+  <a
+    routerLink="/admin/dashboard"
+    class="cancel-btn"
+  >
+    Cancel
+  </a>
+
+  <button
+    type="submit"
+    class="submit-btn"
+    [disabled]="isLoading"
+  >
+
+    {{ isLoading ? 'Uploading...' : 'Upload Product' }}
+
+  </button>
+
+</section>
+
+
+<!-- MESSAGES -->
+
+<div
+  class="success-message"
+  *ngIf="successMessage"
+>
+  {{ successMessage }}
+</div>
+
+<div
+  class="error-message"
+  *ngIf="errorMessage"
+>
+  {{ errorMessage }}
+</div>
+
+
+  </form>
+
+</div>
+

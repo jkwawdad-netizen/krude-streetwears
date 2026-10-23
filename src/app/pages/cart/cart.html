@@ -1,0 +1,218 @@
+<section class="cart-page">
+
+  <!-- HEADER -->
+  <section class="cart-hero">
+
+    <div>
+      <p class="section-label">KRŪDE / CART</p>
+
+      <h1>
+        YOUR<br>
+        <span>DROP.</span>
+      </h1>
+    </div>
+
+    <div class="cart-count">
+      <span>ITEMS</span>
+      <strong>{{ cartItems.length }}</strong>
+    </div>
+
+  </section>
+
+
+  <!-- CART CONTENT -->
+  <section class="cart-content">
+
+    <!-- PRODUCTS -->
+    <div class="cart-products">
+
+      <div
+        class="cart-item"
+        *ngFor="let item of cartItems"
+      >
+
+        <div class="cart-image">
+
+          <img
+  [src]="backendUrl + item.image"
+  [alt]="item.name"
+>
+        </div>
+
+
+        <div class="cart-info">
+
+          <div>
+
+            <p class="item-number">
+              KRŪDE / {{ item.id }}
+            </p>
+
+            <h2>
+              {{ item.name }}
+            </h2>
+
+            <p class="item-meta">
+              SIZE / {{ item.size }}
+            </p>
+
+            <p class="item-price">
+              GH₵ {{ item.price }}
+            </p>
+
+          </div>
+
+
+          <!-- QUANTITY -->
+          <div class="cart-actions">
+
+            <div class="quantity">
+
+              <button
+                (click)="decreaseQuantity(item.id, item.size)"
+              >
+                −
+              </button>
+
+              <span>
+                {{ item.quantity }}
+              </span>
+
+              <button
+                (click)="increaseQuantity(item.id, item.size)"
+              >
+                +
+              </button>
+
+            </div>
+
+
+            <button
+              class="remove-btn"
+              (click)="removeItem(item.id, item.size)"
+            >
+              REMOVE
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- ITEM TOTAL -->
+        <div class="item-total">
+
+          GH₵ {{ item.price * item.quantity }}
+
+        </div>
+
+      </div>
+
+
+      <!-- EMPTY CART -->
+      <div
+        class="empty-cart"
+        *ngIf="cartItems.length === 0"
+      >
+
+        <p class="section-label">
+          KRŪDE / 00
+        </p>
+
+        <h2>
+          YOUR CART<br>
+          <span>IS EMPTY.</span>
+        </h2>
+
+        <p>
+          Nothing here yet. Find something that matches your attitude.
+        </p>
+
+        <a
+          routerLink="/shop"
+          class="continue-shopping"
+        >
+          EXPLORE THE DROP →
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+    <aside
+      class="cart-summary"
+      *ngIf="cartItems.length > 0"
+    >
+
+      <p class="section-label">
+        ORDER SUMMARY
+      </p>
+
+      <div class="summary-line">
+
+        <span>SUBTOTAL</span>
+
+        <strong>
+          GH₵ {{ getTotal() }}
+        </strong>
+
+      </div>
+
+      <div class="summary-line">
+
+        <span>DELIVERY</span>
+
+        <span>
+          CALCULATED AT CHECKOUT
+        </span>
+
+      </div>
+
+      <div class="summary-line total">
+
+        <span>TOTAL</span>
+
+        <strong>
+          GH₵ {{ getTotal() }}
+        </strong>
+
+      </div>
+
+
+      <a
+        routerLink="/checkout"
+        class="checkout-btn"
+      >
+        PROCEED TO CHECKOUT
+        <span>→</span>
+      </a>
+
+
+      <a
+        routerLink="/shop"
+        class="continue-link"
+      >
+        ← CONTINUE SHOPPING
+      </a>
+
+    </aside>
+
+  </section>
+
+</section>
+
+
+<!-- BOTTOM STATEMENT -->
+
+<section class="cart-statement">
+
+  <p>KRŪDE / 2026</p>
+
+  <h2>
+    WEAR<br>
+    <span>YOUR ATTITUDE.</span>
+  </h2>
+
+</section>

@@ -1,0 +1,29 @@
+<nav class="navbar">
+  <div class="navbar-container">
+
+
+<a routerLink="/" class="logo">
+  <img src="/images/krude-logo.png" alt="Krūde Streetwears">
+
+  <span class="brand-name">
+    KRŪDE <small>STREETWEARS</small>
+  </span>
+</a>
+
+
+<div class="nav-links" [class.active]="menuOpen">
+  <a routerLink="/" (click)="menuOpen = false">Home</a>
+  <a routerLink="/shop" (click)="menuOpen = false">Shop</a>
+  <a routerLink="/about" (click)="menuOpen = false">About</a>
+  <a routerLink="/contact" (click)="menuOpen = false">Contact</a>
+  <a routerLink="/cart" (click)="menuOpen = false">Cart</a>
+</div>
+
+<button class="menu-btn" (click)="toggleMenu()">
+  ☰
+</button>
+
+
+  </div>
+</nav>
+

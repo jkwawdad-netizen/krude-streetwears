@@ -1,0 +1,124 @@
+[
+  {
+    "id": 4,
+    "name": "Joggers Pink",
+    "price": 100,
+    "category": "Joggers",
+    "image": "/uploads/1791291529995-289376946.jpeg",
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": 10,
+    "description": "A hard Jogger"
+  },
+  {
+    "id": 7,
+    "name": "White Crocs",
+    "price": 50,
+    "category": "Crocs",
+    "image": "/uploads/1791460026454-825919364.jpeg",
+    "sizes": [
+      "45"
+    ],
+    "stock": 10,
+    "description": "A very nice one "
+  },
+  {
+    "id": 8,
+    "name": "Black Crocs",
+    "price": 50,
+    "category": "Crocs",
+    "image": "/uploads/1791460542235-183216204.jpeg",
+    "sizes": [
+      "42"
+    ],
+    "stock": 10,
+    "description": "A very nice one "
+  },
+  {
+    "id": 9,
+    "name": "Cros",
+    "price": 33,
+    "category": "Crocs",
+    "image": "/uploads/1791461218270-178373911.jpeg",
+    "sizes": [
+      "42"
+    ],
+    "stock": 5,
+    "description": ""
+  },
+  {
+    "id": 10,
+    "name": "Yellow Jogger",
+    "price": 100,
+    "category": "Joggers",
+    "image": "/uploads/1791588514679-466810996.jpeg",
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": 20,
+    "description": " A very nice one "
+  },
+  {
+    "id": 11,
+    "name": "White Jogger ",
+    "price": 100,
+    "category": "Joggers",
+    "image": "/uploads/1791588639449-673942919.jpeg",
+    "sizes": [
+      "M",
+      "L",
+      "XL",
+      "S"
+    ],
+    "stock": 20,
+    "description": "A very hard Extreme hardddd"
+  },
+  {
+    "id": 12,
+    "name": "Fire Jogger",
+    "price": 80,
+    "category": "Joggers",
+    "image": "/uploads/1791588700969-70434068.jpeg",
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": 30,
+    "description": "A sick one so hard you will like it "
+  },
+  {
+    "id": 13,
+    "name": "Black fire Jogger ",
+    "price": 80,
+    "category": "Joggers",
+    "image": "/uploads/1791588771345-417797307.jpeg",
+    "sizes": [
+      "M",
+      "L",
+      "XL",
+      "S"
+    ],
+    "stock": 20,
+    "description": "A very very hard one to go everywhere "
+  },
+  {
+    "id": 14,
+    "name": "Shirt",
+    "price": 100,
+    "category": "T-Shirts",
+    "image": "/uploads/1792578295206-624046222.jpeg",
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": 10,
+    "description": "Hard one"
+  }
+]

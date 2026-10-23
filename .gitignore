@@ -39,6 +39,41 @@ testem.log
 /typings
 __screenshots__/
 
+
 # System files
 .DS_Store
 Thumbs.db
+
+# Frontend dependencies and build output
+/node_modules/
+/dist/
+/.angular/cache/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Backend dependencies
+backend/node_modules/
+
+# Private admin credentials and customer orders
+backend/admin/data/admin.json
+backend/data/orders.json
+
+# User-uploaded files
+backend/uploads/
+
+
+# Prevent accidental uploads of admin credentials and nested dependencies
+src/app/admin/data/admin.json
+src/app/admin/node_modules/
+
+
+# Accidental admin setup files inside Angular source
+src/app/admin/generate-password.js
+src/app/admin/package.json
+src/app/admin/package-lock.json

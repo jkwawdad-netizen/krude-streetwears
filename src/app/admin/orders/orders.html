@@ -1,0 +1,461 @@
+
+<div class="admin-page">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span>KRŪDE</span>
+      <small>ADMIN</small>
+    </div>
+
+    <nav>
+      <a routerLink="/admin/dashboard">
+        <span>▦</span> Dashboard
+      </a>
+
+      <a routerLink="/admin/dashboard">
+        <span>◈</span> Products
+      </a>
+
+      <a routerLink="/admin/add-product">
+        <span>＋</span> Add Product
+      </a>
+
+      <a routerLink="/admin/orders" class="active">
+        <span>□</span> Orders
+      </a>
+    </nav>
+
+    <button class="logout" type="button" routerLink="/admin/login">
+      Logout
+    </button>
+  </aside>
+
+  <main class="content">
+
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">KRŪDE STREETWEARS</p>
+        <h1>Customer Orders</h1>
+        <p class="muted">Manage purchases, riders, delivery and payment.</p>
+      </div>
+
+      <button
+        class="primary-btn"
+        type="button"
+        (click)="loadOrders()"
+        [disabled]="ordersLoading"
+      >
+        {{ ordersLoading ? 'Refreshing...' : 'Refresh Orders' }}
+      </button>
+    </header>
+
+    <section class="stats">
+      <div class="stat-card">
+        <span>Total Orders</span>
+        <strong>{{ totalOrders }}</strong>
+        <small>All customer orders</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Pending Orders</span>
+        <strong>{{ pendingOrders }}</strong>
+        <small>Awaiting processing</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Paid Revenue</span>
+        <strong>GH₵{{ totalRevenue | number:'1.2-2' }}</strong>
+        <small>Orders marked as paid</small>
+      </div>
+    </section>
+
+    <section class="orders-section">
+
+      <div *ngIf="ordersLoading" class="message">
+        Loading customer orders...
+      </div>
+
+      <div *ngIf="!ordersLoading && orderError" class="message error">
+        <h3>Could not load orders</h3>
+        <p>{{ orderError }}</p>
+        <button class="primary-btn" type="button" (click)="loadOrders()">
+          Try Again
+        </button>
+      </div>
+
+      <ng-container *ngIf="!ordersLoading && !orderError">
+
+        <section class="order-tools">
+          <div class="search-box">
+            <label for="order-search">Search Orders</label>
+            <input
+              id="order-search"
+              type="search"
+              placeholder="Order number, customer, phone or rider..."
+              [value]="searchTerm"
+              (input)="onSearchChange($any($event.target).value)"
+            />
+          </div>
+
+          <div class="filter-box">
+            <label for="order-filter">Filter by Status</label>
+            <select
+              id="order-filter"
+              [value]="selectedStatus"
+              (change)="onStatusChange($any($event.target).value)"
+            >
+              <option value="All">All Orders</option>
+              <option *ngFor="let status of statuses" [value]="status">
+                {{ status }}
+              </option>
+            </select>
+          </div>
+
+          <button
+            type="button"
+            class="clear-filters-btn"
+            (click)="onSearchChange(''); onStatusChange('All')"
+          >
+            Clear Filters
+          </button>
+        </section>
+
+        <div class="results-summary">
+          <p>
+            Showing <strong>{{ firstVisibleOrder }}–{{ lastVisibleOrder }}</strong>
+            of <strong>{{ filteredOrders.length }}</strong> orders
+          </p>
+        </div>
+
+        <div *ngIf="orders.length === 0" class="message empty-orders">
+          <h2>No orders yet</h2>
+          <p>Customer orders submitted through checkout will appear here.</p>
+        </div>
+
+        <div
+          *ngIf="orders.length > 0 && filteredOrders.length === 0"
+          class="message empty-orders"
+        >
+          <h2>No matching orders</h2>
+          <p>Try another search term or select a different status.</p>
+          <button
+            class="primary-btn"
+            type="button"
+            (click)="onSearchChange(''); onStatusChange('All')"
+          >
+            Show All Orders
+          </button>
+        </div>
+
+        <article class="order-card" *ngFor="let order of paginatedOrders">
+
+          <div class="order-heading">
+            <div>
+              <p class="eyebrow">ORDER #{{ order.id }}</p>
+              <h2>
+                {{ order.customer?.firstName || 'Customer' }}
+                {{ order.customer?.lastName || '' }}
+              </h2>
+              <small>
+                {{
+                  order.createdAt
+                    ? (order.createdAt | date:'medium')
+                    : 'Date unavailable'
+                }}
+              </small>
+            </div>
+
+            <strong class="order-total">
+              GH₵{{ (order.total || 0) | number:'1.2-2' }}
+            </strong>
+          </div>
+
+          <div class="customer-details">
+            <p><strong>Phone:</strong> {{ order.customer?.phone || 'Not provided' }}</p>
+            <p><strong>Email:</strong> {{ order.customer?.email || 'Not provided' }}</p>
+            <p>
+              <strong>Address:</strong>
+              {{ order.customer?.address || 'Not provided' }},
+              {{ order.customer?.city || '' }},
+              {{ order.customer?.region || '' }}
+            </p>
+            <p><strong>Delivery:</strong> {{ order.deliveryMethod || 'Standard Delivery' }}</p>
+            <p><strong>Payment method:</strong> {{ order.paymentMethod || 'Not specified' }}</p>
+            <p><strong>Payment status:</strong> {{ order.paymentStatus || 'unpaid' }}</p>
+            <p>
+              <strong>WhatsApp updates:</strong>
+              {{
+                (order.whatsappOptIn || order.customer?.whatsappOptIn)
+                  ? 'Customer opted in'
+                  : 'Not opted in'
+              }}
+            </p>
+          </div>
+
+          <div class="items-section">
+            <h3>Products Ordered</h3>
+
+            <div class="item-row" *ngFor="let item of order.items">
+              <span>
+                {{ item.name || 'Product' }}
+                <span *ngIf="item.size"> — Size {{ item.size }}</span>
+                × {{ item.quantity || 1 }}
+              </span>
+
+              <strong>
+                GH₵{{
+                  ((item.price || 0) * (item.quantity || 1))
+                    | number:'1.2-2'
+                }}
+              </strong>
+            </div>
+
+            <p *ngIf="!order.items?.length">Product details unavailable.</p>
+          </div>
+
+          <div class="order-summary">
+            <p>
+              <span>Subtotal</span>
+              <strong>GH₵{{ (order.subtotal || 0) | number:'1.2-2' }}</strong>
+            </p>
+            <p>
+              <span>Delivery fee</span>
+              <strong>GH₵{{ (order.deliveryFee || 0) | number:'1.2-2' }}</strong>
+            </p>
+            <p class="grand-total">
+              <span>Total</span>
+              <strong>GH₵{{ (order.total || 0) | number:'1.2-2' }}</strong>
+            </p>
+          </div>
+
+          <section class="delivery-management">
+
+            <div class="delivery-section-heading">
+              <p class="eyebrow">ORDER FULFILMENT</p>
+              <h3>Delivery &amp; Payment Management</h3>
+              <p>Arrange delivery, update payment details and keep the customer informed.</p>
+            </div>
+
+            <div class="management-subsection">
+              <div class="subsection-heading">
+                <span class="section-number">01</span>
+                <div>
+                  <h4>Delivery Arrangement</h4>
+                  <p>Enter the rider and delivery information.</p>
+                </div>
+              </div>
+
+              <div class="delivery-form-grid">
+
+                <div class="form-field">
+                  <label [attr.for]="'rider-name-' + order.id">Rider's Full Name</label>
+                  <input
+                    [id]="'rider-name-' + order.id"
+                    type="text"
+                    [(ngModel)]="order.rider.name"
+                    name="riderName-{{ order.id }}"
+                    placeholder="Enter rider's name"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label [attr.for]="'rider-phone-' + order.id">Rider's Phone Number</label>
+                  <input
+                    [id]="'rider-phone-' + order.id"
+                    type="tel"
+                    [(ngModel)]="order.rider.phone"
+                    name="riderPhone-{{ order.id }}"
+                    placeholder="e.g. 0241234567"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label [attr.for]="'delivery-fee-' + order.id">Delivery Fee (GH₵)</label>
+                  <input
+                    [id]="'delivery-fee-' + order.id"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    [(ngModel)]="order.deliveryFee"
+                    name="deliveryFee-{{ order.id }}"
+                    placeholder="0.00"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label [attr.for]="'estimated-delivery-' + order.id">Expected Delivery Time</label>
+                  <input
+                    [id]="'estimated-delivery-' + order.id"
+                    type="text"
+                    [(ngModel)]="order.estimatedDelivery"
+                    name="estimatedDelivery-{{ order.id }}"
+                    placeholder="e.g. Today, 3–5 PM"
+                  />
+                </div>
+
+              </div>
+            </div>
+
+            <div class="management-subsection">
+              <div class="subsection-heading">
+                <span class="section-number">02</span>
+                <div>
+                  <h4>Payment Information</h4>
+                  <p>Choose the payment method and update payment status.</p>
+                </div>
+              </div>
+
+              <div class="delivery-form-grid">
+
+                <div class="form-field">
+                  <label [attr.for]="'payment-method-' + order.id">Payment Method</label>
+                  <select
+                    [id]="'payment-method-' + order.id"
+                    [(ngModel)]="order.paymentMethod"
+                    name="paymentMethod-{{ order.id }}"
+                  >
+                    <option *ngFor="let method of paymentMethods" [value]="method">
+                      {{ method }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-field">
+                  <label [attr.for]="'payment-status-' + order.id">Payment Status</label>
+                  <select
+                    [id]="'payment-status-' + order.id"
+                    [(ngModel)]="order.paymentStatus"
+                    name="paymentStatus-{{ order.id }}"
+                  >
+                    <option value="unpaid">Unpaid</option>
+                    <option value="pending">Pending Confirmation</option>
+                    <option value="paid">Paid</option>
+                    <option value="refunded">Refunded</option>
+                  </select>
+                </div>
+
+                <div class="form-field full-width">
+                  <label [attr.for]="'payment-instructions-' + order.id">
+                    Customer Payment &amp; Delivery Instructions
+                  </label>
+                  <textarea
+                    [id]="'payment-instructions-' + order.id"
+                    [(ngModel)]="order.paymentInstructions"
+                    name="paymentInstructions-{{ order.id }}"
+                    rows="3"
+                    placeholder="Explain where or how the customer should pay, or add delivery instructions..."
+                  ></textarea>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="delivery-actions">
+              <button
+                type="button"
+                class="primary-btn"
+                (click)="saveDeliveryDetails(order)"
+                [disabled]="savingDeliveryId !== null || updatingOrderId !== null || deletingOrderId !== null"
+              >
+                {{ savingDeliveryId === order.id ? 'Saving Details...' : 'Save Delivery & Payment Details' }}
+              </button>
+
+              <button
+                type="button"
+                class="whatsapp-btn"
+                (click)="sendDeliveryDetails(order)"
+                [disabled]="savingDeliveryId !== null || !(order.whatsappOptIn || order.customer?.whatsappOptIn)"
+                [title]="!(order.whatsappOptIn || order.customer?.whatsappOptIn) ? 'Customer has not opted in to WhatsApp updates' : 'Open WhatsApp with prepared delivery details'"
+              >
+                {{ savingDeliveryId === order.id ? 'Processing...' : 'Send WhatsApp Update' }}
+              </button>
+            </div>
+
+            <small
+              *ngIf="!(order.whatsappOptIn || order.customer?.whatsappOptIn)"
+              class="help-text"
+            >
+              WhatsApp updates are disabled until the customer opts in.
+            </small>
+
+          </section>
+
+          <div class="order-footer">
+
+            <div class="status-control">
+              <label [attr.for]="'status-' + order.id">Order Progress</label>
+
+              <p class="status-description">
+                Select the current stage of this order.
+              </p>
+
+              <select
+                [id]="'status-' + order.id"
+                [value]="order.status || 'Pending'"
+                (change)="updateOrderStatus(order, $any($event.target).value)"
+                [disabled]="updatingOrderId !== null || savingDeliveryId !== null || deletingOrderId !== null"
+              >
+                <option *ngFor="let status of statuses" [value]="status">
+                  {{ status }}
+                </option>
+              </select>
+
+              <small *ngIf="updatingOrderId === order.id">
+                Updating order progress...
+              </small>
+            </div>
+
+            <button
+              type="button"
+              class="delete-order-btn"
+              (click)="deleteOrder(order)"
+              [disabled]="deletingOrderId !== null || updatingOrderId !== null || savingDeliveryId !== null"
+            >
+              {{ deletingOrderId === order.id ? 'Deleting Order...' : 'Delete Order' }}
+            </button>
+
+          </div>
+
+        </article>
+
+        <nav
+          class="orders-pagination"
+          *ngIf="filteredOrders.length > pageSize"
+          aria-label="Orders pagination"
+        >
+          <button
+            type="button"
+            class="page-btn"
+            (click)="goToPage(currentPage - 1)"
+            [disabled]="currentPage === 1"
+          >
+            Previous
+          </button>
+
+          <button
+            type="button"
+            class="page-number"
+            *ngFor="let page of pageNumbers"
+            [class.current-page]="currentPage === page"
+            [attr.aria-current]="currentPage === page ? 'page' : null"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+
+          <button
+            type="button"
+            class="page-btn"
+            (click)="goToPage(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+          >
+            Next
+          </button>
+        </nav>
+
+      </ng-container>
+
+    </section>
+
+  </main>
+</div>

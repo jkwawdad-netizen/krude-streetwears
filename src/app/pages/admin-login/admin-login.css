@@ -1,0 +1,169 @@
+.admin-login-page {
+  min-height: 100vh;
+  background: #111111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+
+.admin-login-card {
+  width: 100%;
+  max-width: 450px;
+  background: #ffffff;
+  padding: 50px 45px;
+  box-sizing: border-box;
+}
+
+
+.admin-logo {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #111111;
+  margin-bottom: 45px;
+}
+
+
+.admin-logo span {
+  display: block;
+  margin-top: 5px;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #777777;
+}
+
+
+.login-heading p {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffd400;
+}
+
+
+.login-heading h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: #111111;
+}
+
+
+.login-heading span {
+  display: block;
+  margin-top: 10px;
+  color: #777777;
+  font-size: 14px;
+}
+
+
+form {
+  margin-top: 35px;
+}
+
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #333333;
+}
+
+
+.form-group input {
+  width: 100%;
+  height: 52px;
+  padding: 0 15px;
+  box-sizing: border-box;
+  border: 1px solid #dddddd;
+  background: #fafafa;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+
+.form-group input:focus {
+  border-color: #111111;
+  background: #ffffff;
+}
+
+
+.login-btn {
+  width: 100%;
+  height: 55px;
+  border: none;
+  background: #111111;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+
+.login-btn:hover {
+  background: #ffd400;
+  color: #111111;
+}
+
+
+.back-home {
+  display: block;
+  margin-top: 25px;
+  text-align: center;
+  color: #777777;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  transition: 0.3s ease;
+}
+
+
+.back-home:hover {
+  color: #111111;
+}
+
+
+@media (max-width: 500px) {
+
+  .admin-login-page {
+    padding: 20px;
+  }
+
+  .admin-login-card {
+    padding: 40px 25px;
+  }
+
+  .admin-logo {
+    font-size: 27px;
+  }
+
+  .login-heading h1 {
+    font-size: 25px;
+  }
+
+}
+.login-error {
+  margin: -5px 0 18px;
+  color: #d00000;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

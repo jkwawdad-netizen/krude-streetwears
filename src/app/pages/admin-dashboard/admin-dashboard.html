@@ -1,0 +1,218 @@
+
+<div class="admin-page">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span>KRŪDE</span>
+      <small>ADMIN</small>
+    </div>
+
+    <nav>
+      <a routerLink="/admin/dashboard" class="active">
+        <span>▦</span>
+        Dashboard
+      </a>
+
+      <a routerLink="/admin/dashboard">
+        <span>◈</span>
+        Products
+      </a>
+
+      <a routerLink="/admin/add-product">
+        <span>＋</span>
+        Add Product
+      </a>
+
+      <a routerLink="/admin/orders">
+        <span>□</span>
+        Orders
+      </a>
+    </nav>
+
+    <button class="logout" type="button" routerLink="/admin/login">
+      Logout
+    </button>
+  </aside>
+
+  <main class="content">
+
+    <!-- HEADER -->
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">KRŪDE STREETWEARS</p>
+        <h1>Dashboard</h1>
+      </div>
+
+      <div class="admin-user">
+        <span class="avatar">A</span>
+        <div>
+          <strong>Admin</strong>
+          <small>Administrator</small>
+        </div>
+      </div>
+    </header>
+
+    <!-- STATS -->
+    <section class="stats">
+
+      <div class="stat-card">
+        <span>Total Products</span>
+        <strong>{{ totalProducts }}</strong>
+        <small>Products in store</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Orders</span>
+        <strong>{{ totalOrders }}</strong>
+        <small>Total customer orders</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Low Stock</span>
+        <strong>{{ lowStock }}</strong>
+        <small>Need attention</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Revenue</span>
+        <strong>GH₵{{ totalRevenue | number:'1.2-2' }}</strong>
+        <small>Paid or completed orders</small>
+      </div>
+
+    </section>
+
+    <!-- PRODUCTS AREA -->
+    <section class="products-panel">
+
+      <div class="products-header">
+        <div>
+          <p class="eyebrow">CATALOGUE</p>
+          <h2>Your Products</h2>
+          <p class="products-count">
+            {{ totalProducts }} products currently in your store
+          </p>
+        </div>
+
+        <a routerLink="/admin/add-product" class="primary-btn">
+          + Add Product
+        </a>
+      </div>
+
+      <!-- PRODUCT GRID -->
+      <div class="product-grid" *ngIf="products.length > 0">
+
+        <article class="product-card" *ngFor="let product of products">
+
+          <div class="product-image">
+            <img
+              [src]="
+  product.image?.startsWith('http')
+    ? product.image
+    : backendUrl + product.image
+"
+              [alt]="product.name"
+            />
+
+            <span class="category-tag">
+              {{ product.category }}
+            </span>
+          </div>
+
+          <div class="product-details">
+
+            <div class="product-top">
+              <div>
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+              </div>
+            </div>
+
+            <div class="product-meta">
+              <strong>GH₵{{ product.price }}</strong>
+
+              <span [class.low-stock]="product.stock <= 5">
+                {{ product.stock }} in stock
+              </span>
+            </div>
+
+            <div class="product-actions">
+
+              <a
+                class="edit-btn"
+                [routerLink]="['/admin/edit-product', product.id]"
+              >
+                Edit
+              </a>
+
+              <button
+                class="delete-btn"
+                type="button"
+                (click)="deleteProduct(product)"
+                [disabled]="deletingProductId === product.id"
+              >
+                {{
+                  deletingProductId === product.id
+                    ? 'Deleting...'
+                    : 'Delete'
+                }}
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      </div>
+
+      <!-- EMPTY PRODUCT STATE -->
+      <div class="empty-state" *ngIf="products.length === 0">
+
+        <div class="empty-icon">◈</div>
+
+        <h3>No products yet</h3>
+
+        <p>
+          Products uploaded from the admin panel will appear here.
+        </p>
+
+        <a routerLink="/admin/add-product" class="primary-btn">
+          Add Your First Product
+        </a>
+
+      </div>
+
+    </section>
+
+    <!-- QUICK ACTIONS -->
+    <section class="quick-section">
+
+      <div>
+        <p class="eyebrow">QUICK ACTIONS</p>
+        <h2>Manage Store</h2>
+      </div>
+
+      <div class="quick-actions">
+
+        <a routerLink="/admin/add-product" class="quick-action">
+          <span>＋</span>
+          Add Product
+        </a>
+
+        <a routerLink="/admin/orders" class="quick-action">
+          <span>□</span>
+          View Orders
+        </a>
+
+        <a routerLink="/admin/dashboard" class="quick-action">
+          <span>⚙</span>
+          Store Dashboard
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>

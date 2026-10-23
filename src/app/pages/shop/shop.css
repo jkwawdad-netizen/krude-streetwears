@@ -1,0 +1,604 @@
+
+/* =========================
+   KRŪDE STREETWEARS — SHOP
+========================= */
+
+.shop-page {
+  background: #f5f5f3;
+  color: #111;
+}
+
+
+/* =========================
+   SHOP HERO
+========================= */
+
+.shop-hero {
+  min-height: 65vh;
+  background: #111;
+  color: #fff;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  padding: 100px 7vw 70px;
+  box-sizing: border-box;
+}
+
+.section-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin: 0 0 25px;
+  color: #ffd400;
+}
+
+.shop-hero h1 {
+  margin: 0;
+
+  font-size: clamp(70px, 11vw, 170px);
+  line-height: .82;
+  letter-spacing: -6px;
+  font-weight: 900;
+}
+
+.shop-hero h1 span {
+  color: #ffd400;
+}
+
+.shop-intro {
+  max-width: 430px;
+  margin-top: 40px;
+
+  font-size: 16px;
+  line-height: 1.7;
+  color: #bdbdbd;
+}
+
+.drop-number {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  gap: 5px;
+
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #aaa;
+}
+
+.drop-number strong {
+  font-size: 70px;
+  line-height: .9;
+  color: #ffd400;
+}
+
+
+/* =========================
+   CONTROLS
+========================= */
+
+.shop-controls {
+  padding: 30px 7vw;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-bottom: 1px solid #d5d5d5;
+  background: #f5f5f3;
+}
+
+.categories {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.categories button {
+  border: none;
+  background: none;
+
+  padding: 8px 0;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+
+  cursor: pointer;
+
+  color: #888;
+  border-bottom: 2px solid transparent;
+
+  transition: .25s ease;
+}
+
+.categories button:hover,
+.categories button.active {
+  color: #111;
+  border-bottom-color: #ffd400;
+}
+
+.sort select {
+  border: none;
+  border-bottom: 1px solid #111;
+
+  background: transparent;
+
+  padding: 8px 25px 8px 0;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
+  outline: none;
+  cursor: pointer;
+}
+
+
+/* =========================
+   PRODUCTS
+========================= */
+
+.products {
+  padding: 70px 7vw 120px;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 90px 30px;
+}
+
+
+/* =========================
+   PRODUCT CARD
+========================= */
+
+.product-card {
+  min-width: 0;
+
+  position: relative;
+
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-image {
+  position: relative;
+
+  height: 620px;
+
+  overflow: hidden;
+
+  background: #e5e5e5;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  display: block;
+
+  transition:
+    transform .8s cubic-bezier(.2,.7,.2,1),
+    filter .5s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+  filter: brightness(.92);
+}
+
+
+/* =========================
+   PRODUCT NUMBER
+========================= */
+
+.product-number {
+  position: absolute;
+
+  top: 20px;
+  left: 20px;
+
+  z-index: 2;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+
+  color: #fff;
+}
+
+
+/* =========================
+   SOLD OUT BADGE
+========================= */
+
+.badge {
+  position: absolute;
+
+  top: 20px;
+  right: 20px;
+
+  z-index: 2;
+
+  padding: 8px 12px;
+
+  background: #ffd400;
+  color: #111;
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+
+/* =========================
+   QUICK ADD
+========================= */
+
+.quick-add {
+  position: absolute;
+
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+
+  padding: 17px;
+
+  border: none;
+
+  background: #ffd400;
+  color: #111;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+
+  cursor: pointer;
+
+  transform: translateY(80px);
+
+  transition:
+    transform .35s ease,
+    background .25s ease,
+    color .25s ease;
+}
+
+.product-card:hover .quick-add {
+  transform: translateY(0);
+}
+
+.quick-add:hover {
+  background: #111;
+  color: #ffd400;
+}
+
+
+/* =========================
+   PRODUCT INFO BOX
+   NAME + PRICE ONLY
+========================= */
+
+.product-info {
+  margin-top: -1px;
+
+  padding: 16px 18px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #111;
+  color: #fff;
+
+  border-left: 3px solid #ffd400;
+
+  box-sizing: border-box;
+
+  transition:
+    background .3s ease,
+    border-color .3s ease;
+}
+
+
+/* PRODUCT NAME */
+
+.product-info h2 {
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  color: #fff;
+}
+
+
+/* HIDE DESCRIPTION */
+
+.product-info p {
+  display: none;
+}
+
+
+/* PRICE */
+
+.product-info strong {
+  margin: 0;
+
+  white-space: nowrap;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  letter-spacing: .5px;
+
+  color: #ffd400;
+}
+
+
+/* HOVER */
+
+.product-card:hover .product-info {
+  background: #1c1c1c;
+  border-left-color: #ffd400;
+}
+
+.product-card:hover .product-info h2 {
+  color: #ffd400;
+}
+
+
+/* =========================
+   SHOP STATEMENT
+========================= */
+
+.shop-statement {
+  min-height: 75vh;
+
+  padding: 120px 7vw;
+
+  background: #111;
+  color: #fff;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.shop-statement .section-label {
+  color: #ffd400;
+}
+
+.shop-statement h2 {
+  margin: 0;
+
+  font-size: clamp(60px, 10vw, 150px);
+  line-height: .85;
+  letter-spacing: -5px;
+  font-weight: 900;
+}
+
+.shop-statement h2 span {
+  color: #ffd400;
+}
+
+.shop-statement > p:last-child {
+  max-width: 400px;
+
+  margin-top: 40px;
+
+  color: #aaa;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .shop-hero {
+    min-height: 60vh;
+    padding: 80px 5vw 60px;
+  }
+
+  .shop-controls {
+    padding: 25px 5vw;
+  }
+
+  .products {
+    padding: 60px 5vw 100px;
+    gap: 60px 20px;
+  }
+
+  .product-image {
+    height: 500px;
+  }
+
+  .product-info h2 {
+    font-size: 14px;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+
+  .shop-hero {
+    min-height: auto;
+
+    padding: 90px 6vw 60px;
+
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .shop-hero h1 {
+    font-size: 75px;
+    letter-spacing: -4px;
+  }
+
+  .shop-intro {
+    margin-top: 30px;
+    font-size: 14px;
+  }
+
+  .drop-number {
+    margin-top: 50px;
+    align-items: flex-start;
+  }
+
+  .drop-number strong {
+    font-size: 50px;
+  }
+
+
+  /* CONTROLS */
+
+  .shop-controls {
+    padding: 25px 6vw;
+
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 25px;
+  }
+
+  .categories {
+    gap: 18px;
+  }
+
+
+  /* PRODUCTS */
+
+  .products {
+    padding: 50px 6vw 80px;
+
+    grid-template-columns: 1fr;
+
+    gap: 60px;
+  }
+
+  .product-image {
+    height: 520px;
+  }
+
+  .quick-add {
+    transform: translateY(0);
+  }
+
+
+  /* PRODUCT INFO */
+
+  .product-info {
+    padding: 15px 16px;
+  }
+
+  .product-info h2 {
+    font-size: 13px;
+  }
+
+  .product-info strong {
+    font-size: 13px;
+  }
+
+
+  /* STATEMENT */
+
+  .shop-statement {
+    min-height: 60vh;
+    padding: 90px 6vw;
+  }
+
+  .shop-statement h2 {
+    font-size: 65px;
+    letter-spacing: -3px;
+  }
+
+}
+/* =========================
+   PAGINATION
+========================= */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 0 7vw 100px;
+}
+
+.pagination-number,
+.pagination-arrow {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #d5d5d5;
+
+  background: transparent;
+  color: #111;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  transition:
+    background .3s ease,
+    color .3s ease,
+    border-color .3s ease,
+    transform .3s ease;
+}
+
+.pagination-number:hover,
+.pagination-arrow:hover:not(:disabled) {
+  background: #111;
+  color: #ffd400;
+  border-color: #111;
+  transform: translateY(-2px);
+}
+
+.pagination-number.active {
+  background: #ffd400;
+  color: #111;
+  border-color: #ffd400;
+}
+
+.pagination-arrow:disabled {
+  opacity: .3;
+  cursor: not-allowed;
+}
+
+@media (max-width: 650px) {
+
+  .pagination {
+    padding: 0 6vw 80px;
+    gap: 6px;
+  }
+
+  .pagination-number,
+  .pagination-arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 10px;
+  }
+
+}
+

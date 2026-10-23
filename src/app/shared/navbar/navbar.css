@@ -1,0 +1,226 @@
+.navbar {
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid #eeeeee;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+/* =========================
+   KRŪDE LOGO
+========================= */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  height: 45px;
+
+  text-decoration: none;
+}
+
+.logo img {
+  width: 75px;
+  height: 40px;
+
+  max-width: 75px;
+  max-height: 40px;
+
+  object-fit: contain;
+  display: block;
+
+  transition: transform 0.3s ease;
+}
+
+
+/* =========================
+   BRAND NAME
+========================= */
+
+.brand-name {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+
+  color: #111111;
+
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 1px;
+
+  transition: transform 0.3s ease;
+}
+
+.brand-name small {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+
+  color: #777777;
+
+  transition: color 0.3s ease;
+}
+
+
+/* =========================
+   LOGO ANIMATION
+========================= */
+
+.logo:hover img {
+  transform: scale(1.08) rotate(-2deg);
+}
+
+.logo:hover .brand-name {
+  transform: translateX(3px);
+}
+
+.logo:hover .brand-name small {
+  color: #ffd400;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-links a {
+  position: relative;
+
+  text-decoration: none;
+  color: #333333;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  padding: 8px 0;
+
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+/* YELLOW UNDERLINE */
+
+.nav-links a::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 2px;
+
+  background: #ffd400;
+
+  transform: scaleX(0);
+  transform-origin: center;
+
+  transition: transform 0.3s ease;
+}
+
+
+/* HOVER */
+
+.nav-links a:hover {
+  color: #111111;
+  transform: translateY(-2px);
+}
+
+.nav-links a:hover::after {
+  transform: scaleX(1);
+}
+
+
+/* =========================
+   MOBILE BUTTON
+========================= */
+
+.menu-btn {
+  display: none;
+
+  border: none;
+  background: none;
+
+  font-size: 26px;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .nav-links {
+    display: none;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+
+  .navbar-container {
+    padding: 12px 20px;
+  }
+
+  .nav-links.active {
+    display: flex;
+
+    position: absolute;
+
+    top: 69px;
+    left: 0;
+
+    width: 100%;
+
+    background: #ffffff;
+
+    padding: 20px;
+
+    flex-direction: column;
+    gap: 20px;
+
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .nav-links.active a {
+    padding: 5px 0;
+  }
+
+  .brand-name {
+    font-size: 16px;
+  }
+
+  .brand-name small {
+    font-size: 7px;
+  }
+
+  .logo img {
+    width: 65px;
+    height: 38px;
+  }
+}

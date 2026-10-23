@@ -1,0 +1,228 @@
+
+<section class="checkout-page">
+  <header class="checkout-header">
+    <p class="section-label">KRŪDE / CHECKOUT</p>
+    <h1>
+      COMPLETE<br>
+      <span>YOUR ORDER.</span>
+    </h1>
+  </header>
+
+  <section class="checkout-content">
+    <div class="customer-details">
+      <p class="section-label">01 / CUSTOMER DETAILS</p>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="firstName">FIRST NAME</label>
+          <input id="firstName" type="text" name="firstName"
+            [(ngModel)]="customer.firstName" placeholder="First name"
+            autocomplete="given-name" required>
+        </div>
+
+        <div class="field">
+          <label for="lastName">LAST NAME</label>
+          <input id="lastName" type="text" name="lastName"
+            [(ngModel)]="customer.lastName" placeholder="Last name"
+            autocomplete="family-name" required>
+        </div>
+
+        <div class="field">
+          <label for="phone">PHONE NUMBER</label>
+          <input id="phone" type="tel" name="phone"
+            [(ngModel)]="customer.phone" placeholder="024 XXX XXXX"
+            autocomplete="tel" required>
+        </div>
+
+        <div class="field">
+          <label for="email">EMAIL</label>
+          <input id="email" type="email" name="email"
+            [(ngModel)]="customer.email" placeholder="Your email"
+            autocomplete="email" required>
+        </div>
+
+        <div class="field full">
+          <label for="address">DELIVERY ADDRESS</label>
+          <input id="address" type="text" name="address"
+            [(ngModel)]="customer.address"
+            placeholder="House number, street, area"
+            autocomplete="street-address" required>
+        </div>
+
+        <div class="field">
+          <label for="city">CITY</label>
+          <input id="city" type="text" name="city"
+            [(ngModel)]="customer.city" placeholder="Accra"
+            autocomplete="address-level2" required>
+        </div>
+
+        <div class="field">
+          <label for="region">REGION</label>
+          <select id="region" name="region"
+            [(ngModel)]="customer.region" required>
+            <option value="">Select region</option>
+            <option>Greater Accra</option>
+            <option>Ashanti</option>
+            <option>Eastern</option>
+            <option>Western</option>
+            <option>Central</option>
+            <option>Volta</option>
+            <option>Bono</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="checkout-section">
+        <p class="section-label">02 / DELIVERY</p>
+
+        <label class="delivery-option">
+          <input type="radio" name="deliveryMethod"
+            [(ngModel)]="deliveryMethod" value="Standard Delivery">
+          <span>
+            <strong>STANDARD DELIVERY</strong>
+            <small>Delivery fee will be confirmed based on your location.</small>
+          </span>
+        </label>
+
+        <label class="delivery-option">
+          <input type="radio" name="deliveryMethod"
+            [(ngModel)]="deliveryMethod" value="Pickup">
+          <span>
+            <strong>SELF PICKUP</strong>
+            <small>Arrange pickup details with the shop.</small>
+          </span>
+        </label>
+      </div>
+
+      <div class="checkout-section">
+        <p class="section-label">03 / PAYMENT</p>
+
+        <label class="payment-option">
+          <input type="radio" name="paymentMethod"
+            [(ngModel)]="paymentMethod"
+            value="Shop/Rider Confirmed Payment">
+          <span>
+            <strong>PAYMENT ON CONFIRMATION</strong>
+            <small>The shop will confirm payment arrangements with you.</small>
+          </span>
+        </label>
+
+        <label class="payment-option">
+          <input type="radio" name="paymentMethod"
+            [(ngModel)]="paymentMethod"
+            value="Paystack">
+          <span>
+            <strong>PAY ONLINE WITH PAYSTACK</strong>
+            <small>
+              Continue to Paystack's secure checkout to pay online using
+              the payment methods available to you.
+            </small>
+          </span>
+        </label>
+      </div>
+
+      <div class="checkout-section whatsapp-consent">
+        <p class="section-label">04 / ORDER UPDATES</p>
+
+        <label class="consent-option">
+          <input type="checkbox" name="whatsappOptIn"
+            [(ngModel)]="whatsappOptIn">
+          <span>
+            <strong>WHATSAPP ORDER UPDATES</strong>
+            <small>
+              I agree to receive order confirmation and delivery updates
+              from Krūde Streetwears through WhatsApp. This is optional.
+            </small>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <aside class="order-summary">
+      <p class="section-label">YOUR ORDER</p>
+
+      <p *ngIf="cartItems.length === 0">
+        Your cart is empty.
+        <a routerLink="/shop">Continue shopping</a>
+      </p>
+
+      <div class="summary-product" *ngFor="let item of cartItems">
+        <img [src]="getProductImage(item.image)"
+          [alt]="item.name" (error)="onImageError($event)">
+
+        <div>
+          <h2>{{ item.name }}</h2>
+          <p *ngIf="item.size">Size: {{ item.size }}</p>
+          <span>Qty {{ item.quantity }}</span>
+        </div>
+
+        <strong>
+          GH₵ {{ item.price * item.quantity | number:'1.2-2' }}
+        </strong>
+      </div>
+
+      <div class="summary-line"></div>
+
+      <div class="summary-row">
+        <span>SUBTOTAL</span>
+        <strong>GH₵ {{ subtotal | number:'1.2-2' }}</strong>
+      </div>
+
+      <div class="summary-row">
+        <span>DELIVERY</span>
+        <span>
+          {{ deliveryMethod === 'Pickup' ? 'PICKUP' : 'CONFIRM WITH SHOP' }}
+        </span>
+      </div>
+
+      <div class="summary-line"></div>
+
+      <div class="total">
+        <span>ORDER SUBTOTAL</span>
+        <strong>GH₵ {{ subtotal | number:'1.2-2' }}</strong>
+      </div>
+
+      <p class="delivery-note">
+        Delivery fees are not included and will be confirmed separately
+        by the shop. Online payment will cover the order subtotal only
+        until delivery charges are established.
+      </p>
+
+      <button class="place-order whatsapp-order"
+        type="button" (click)="placeOrder()"
+        [disabled]="isSubmitting || orderSubmitted || cartItems.length === 0">
+        {{
+          isSubmitting
+            ? 'PROCESSING ORDER...'
+            : orderSubmitted
+              ? 'ORDER SUBMITTED'
+              : paymentMethod === 'Paystack'
+                ? 'CONTINUE TO PAYSTACK'
+                : 'PLACE ORDER & CONTINUE TO WHATSAPP'
+        }}
+        <span>
+          {{ isSubmitting ? '…' : orderSubmitted ? '✓' : '↗' }}
+        </span>
+      </button>
+
+      <p class="delivery-note">
+        {{
+          paymentMethod === 'Paystack'
+            ? 'Your order will be saved before online payment begins.'
+            : 'Your order will be saved first. WhatsApp will then open with your order details ready for you to review and send.'
+        }}
+      </p>
+
+      <a routerLink="/cart" class="back-cart">← BACK TO CART</a>
+    </aside>
+  </section>
+</section>
+
+<section class="checkout-statement">
+  <p>KRŪDE / 2026</p>
+  <h2>
+    MADE TO<br>
+    <span>STAND OUT.</span>
+  </h2>
+</section>

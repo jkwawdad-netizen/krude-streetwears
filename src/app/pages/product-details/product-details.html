@@ -1,0 +1,306 @@
+
+@if (isLoading) {
+
+  <section class="product-status">
+
+    <p class="section-label">
+      KRŪDE / LOADING
+    </p>
+
+    <h1>
+      LOADING<br>
+      <span>PRODUCT.</span>
+    </h1>
+
+    <p>
+      Please wait while we load this piece.
+    </p>
+
+  </section>
+
+}
+
+
+@if (!isLoading && errorMessage) {
+
+  <section class="product-status">
+
+    <p class="section-label">
+      KRŪDE / ERROR
+    </p>
+
+    <h1>
+      PRODUCT<br>
+      <span>NOT FOUND.</span>
+    </h1>
+
+    <p>
+      {{ errorMessage }}
+    </p>
+
+    <a
+      routerLink="/shop"
+      class="back-to-shop"
+    >
+      ← BACK TO SHOP
+    </a>
+
+  </section>
+
+}
+
+
+@if (!isLoading && !errorMessage && product) {
+
+  <section class="product-page">
+
+    <!-- PRODUCT IMAGE -->
+    <div class="product-visual">
+
+      <span class="product-number">
+        KRŪDE /
+        {{ product.id < 10 ? '0' + product.id : product.id }}
+      </span>
+
+
+      <img
+        [src]="backendUrl + product.image"
+        [alt]="product.name"
+      >
+
+
+      @if (product.stock <= 0) {
+
+        <div class="image-tag">
+          SOLD OUT
+        </div>
+
+      } @else {
+
+        <div class="image-tag">
+          NEW DROP
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- PRODUCT INFORMATION -->
+    <div class="product-content">
+
+      <a
+        routerLink="/shop"
+        class="back-to-shop"
+      >
+        ← BACK TO SHOP
+      </a>
+
+
+      <p class="section-label">
+        KRŪDE / {{ product.category }}
+      </p>
+
+
+      <h1>
+        {{ product.name }}
+      </h1>
+
+
+      <div class="product-price">
+        GH₵ {{ product.price }}
+      </div>
+
+
+      <div class="product-line"></div>
+
+
+      <p class="product-description">
+        {{ product.description }}
+      </p>
+
+
+      <!-- SIZE -->
+      @if (product.sizes && product.sizes.length > 0) {
+
+        <div class="option">
+
+          <div class="option-heading">
+
+            <span>
+              SELECT SIZE
+            </span>
+
+            <span>
+              SIZE GUIDE
+            </span>
+
+          </div>
+
+
+          <div class="sizes">
+
+            @for (size of product.sizes; track size) {
+
+              <button
+                type="button"
+                [class.selected]="selectedSize === size"
+                (click)="selectSize(size)"
+              >
+                {{ size }}
+              </button>
+
+            }
+
+          </div>
+
+        </div>
+
+      }
+
+
+      <!-- QUANTITY -->
+      <div class="option">
+
+        <div class="option-heading">
+
+          <span>
+            QUANTITY
+          </span>
+
+        </div>
+
+
+        <div class="quantity">
+
+          <button
+            type="button"
+            (click)="decreaseQuantity()"
+          >
+            −
+          </button>
+
+
+          <span>
+            {{ quantity }}
+          </span>
+
+
+          <button
+            type="button"
+            (click)="increaseQuantity()"
+            [disabled]="quantity >= product.stock"
+          >
+            +
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- STOCK -->
+      <div class="stock-status">
+
+        @if (product.stock > 0) {
+
+          <span>
+            {{ product.stock }} AVAILABLE
+          </span>
+
+        } @else {
+
+          <span>
+            SOLD OUT
+          </span>
+
+        }
+
+      </div>
+
+
+      <!-- ADD TO CART -->
+      <button
+        type="button"
+        class="add-cart"
+        (click)="addToCart()"
+        [disabled]="product.stock <= 0"
+      >
+
+        @if (product.stock > 0) {
+
+          ADD TO CART
+          <span>→</span>
+
+        } @else {
+
+          SOLD OUT
+
+        }
+
+      </button>
+
+
+      <!-- PRODUCT DETAILS -->
+      <div class="details">
+
+        <div class="detail-item">
+
+          <span>
+            01
+          </span>
+
+          <strong>
+            DESCRIPTION
+          </strong>
+
+        </div>
+
+
+        <p>
+          {{ product.description }}
+        </p>
+
+
+        <div class="detail-item">
+
+          <span>
+            02
+          </span>
+
+          <strong>
+            DELIVERY
+          </strong>
+
+        </div>
+
+
+        <p>
+          Delivery available across Ghana.
+          Contact us for delivery times and locations.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- BOTTOM STATEMENT -->
+
+  <section class="product-statement">
+
+    <p>
+      KRŪDE / 2026
+    </p>
+
+    <h2>
+      WEAR<br>
+      <span>YOUR ATTITUDE.</span>
+    </h2>
+
+  </section>
+
+}
+

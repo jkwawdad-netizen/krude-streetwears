@@ -1,0 +1,421 @@
+/* ================================
+KRŪDE STREETWEARS — HOME
+================================ */
+
+.home {
+background: #f5f5f3;
+color: #111;
+}
+
+/* ================================
+HERO
+================================ */
+
+.hero {
+min-height: calc(100vh - 80px);
+display: grid;
+grid-template-columns: 1fr 1fr;
+background: #111;
+color: #fff;
+}
+
+.hero-content {
+display: flex;
+flex-direction: column;
+justify-content: center;
+padding: 70px;
+}
+
+.eyebrow {
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 4px;
+margin-bottom: 30px;
+color: #ffd400;
+}
+
+.hero h1 {
+margin: 0;
+font-size: clamp(65px, 8vw, 125px);
+line-height: 0.82;
+letter-spacing: -7px;
+font-weight: 900;
+}
+
+.hero h1 span {
+color: #ffd400;
+}
+
+.hero-text {
+max-width: 480px;
+margin: 38px 0;
+color: #cfcfcf;
+font-size: 16px;
+line-height: 1.7;
+}
+
+.hero-actions {
+display: flex;
+gap: 12px;
+flex-wrap: wrap;
+}
+
+.btn {
+display: inline-block;
+padding: 16px 25px;
+text-decoration: none;
+font-size: 12px;
+font-weight: 800;
+letter-spacing: 1px;
+transition: 0.3s ease;
+}
+
+.btn-primary {
+background: #ffd400;
+color: #111;
+}
+
+.btn-primary:hover {
+background: #fff;
+transform: translateY(-2px);
+}
+
+.btn-outline {
+border: 1px solid #777;
+color: #fff;
+}
+
+.btn-outline:hover {
+background: #ffd400;
+border-color: #ffd400;
+color: #111;
+}
+
+/* HERO IMAGE */
+
+.hero-image {
+position: relative;
+min-height: 700px;
+overflow: hidden;
+}
+
+.hero-image img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+filter: grayscale(15%);
+transition: transform 0.8s ease;
+}
+
+.hero-image:hover img {
+transform: scale(1.04);
+}
+
+.image-label {
+position: absolute;
+bottom: 25px;
+left: 25px;
+right: 25px;
+display: flex;
+justify-content: space-between;
+color: #ffd400;
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 2px;
+}
+
+/* ================================
+INTRO
+================================ */
+
+.intro {
+max-width: 1000px;
+margin: auto;
+padding: 150px 30px;
+text-align: center;
+}
+
+.section-label {
+margin: 0 0 25px;
+font-size: 11px;
+font-weight: 800;
+letter-spacing: 4px;
+color: #ffd400;
+}
+
+.intro h2 {
+margin: 0;
+font-size: clamp(45px, 6vw, 80px);
+line-height: 0.95;
+letter-spacing: -4px;
+font-weight: 900;
+}
+
+.intro h2 span {
+color: #ffd400;
+}
+
+.intro-text {
+max-width: 650px;
+margin: 35px auto 0;
+color: #666;
+line-height: 1.8;
+font-size: 15px;
+}
+
+/* ================================
+CATEGORIES
+================================ */
+
+.categories {
+max-width: 1300px;
+margin: auto;
+padding: 30px 30px 150px;
+}
+
+.section-heading {
+display: flex;
+justify-content: space-between;
+align-items: end;
+margin-bottom: 45px;
+}
+
+.section-heading h2 {
+margin: 0;
+font-size: clamp(35px, 5vw, 60px);
+letter-spacing: -3px;
+line-height: 1;
+}
+
+.view-all {
+color: #ffd400;
+text-decoration: none;
+font-size: 12px;
+font-weight: 800;
+letter-spacing: 1px;
+transition: 0.3s ease;
+}
+
+.view-all:hover {
+color: #111;
+}
+
+/* CATEGORY GRID */
+
+.category-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 15px;
+}
+
+.category-card {
+position: relative;
+height: 600px;
+overflow: hidden;
+display: block;
+color: #fff;
+text-decoration: none;
+background: #222;
+}
+
+.category-card::after {
+content: "";
+position: absolute;
+inset: 0;
+background: linear-gradient(
+to top,
+rgba(0, 0, 0, 0.8),
+transparent 55%
+);
+}
+
+.category-card img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+transition: transform 0.7s ease;
+}
+
+.category-card:hover img {
+transform: scale(1.07);
+}
+
+.category-overlay {
+position: absolute;
+z-index: 2;
+bottom: 30px;
+left: 30px;
+right: 30px;
+}
+
+.category-overlay span {
+font-size: 11px;
+letter-spacing: 2px;
+color: #ffd400;
+}
+
+.category-overlay h3 {
+margin: 8px 0;
+font-size: 38px;
+letter-spacing: -2px;
+}
+
+.category-overlay p {
+margin: 0;
+font-size: 11px;
+font-weight: 800;
+letter-spacing: 2px;
+}
+
+/* ================================
+STATEMENT
+================================ */
+
+.statement {
+min-height: 750px;
+display: flex;
+align-items: center;
+background:
+linear-gradient(
+rgba(0, 0, 0, 0.55),
+rgba(0, 0, 0, 0.75)
+),
+url("https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=2000&q=85")
+center / cover no-repeat;
+color: #fff;
+}
+
+.statement-content {
+width: 100%;
+max-width: 1300px;
+margin: auto;
+padding: 80px 30px;
+}
+
+.statement .section-label {
+color: #ffd400;
+}
+
+.statement h2 {
+margin: 0 0 45px;
+font-size: clamp(70px, 10vw, 150px);
+line-height: 0.82;
+letter-spacing: -8px;
+font-weight: 900;
+}
+
+.statement h2 span {
+color: #ffd400;
+}
+
+.statement-link {
+display: inline-block;
+color: #ffd400;
+text-decoration: none;
+border-bottom: 1px solid #ffd400;
+padding-bottom: 8px;
+font-size: 12px;
+font-weight: 800;
+letter-spacing: 2px;
+transition: 0.3s ease;
+}
+
+.statement-link:hover {
+padding-right: 10px;
+color: #fff;
+border-color: #fff;
+}
+
+/* ================================
+TABLET
+================================ */
+
+@media (max-width: 900px) {
+
+.hero {
+grid-template-columns: 1fr;
+}
+
+.hero-content {
+min-height: 600px;
+padding: 60px 30px;
+}
+
+.hero-image {
+min-height: 600px;
+}
+
+.category-grid {
+grid-template-columns: 1fr;
+}
+
+.category-card {
+height: 550px;
+}
+
+.statement {
+min-height: 600px;
+}
+}
+
+/* ================================
+MOBILE
+================================ */
+
+@media (max-width: 600px) {
+
+.hero-content {
+padding: 55px 22px;
+}
+
+.hero h1 {
+font-size: 65px;
+letter-spacing: -4px;
+}
+
+.hero-image {
+min-height: 500px;
+}
+
+.intro {
+padding: 100px 22px;
+}
+
+.intro h2 {
+letter-spacing: -2px;
+}
+
+.categories {
+padding: 20px 15px 100px;
+}
+
+.section-heading {
+align-items: flex-start;
+flex-direction: column;
+gap: 20px;
+}
+
+.category-card {
+height: 500px;
+}
+
+.category-overlay h3 {
+font-size: 32px;
+}
+
+.statement {
+min-height: 550px;
+}
+
+.statement-content {
+padding: 60px 22px;
+}
+
+.statement h2 {
+font-size: 75px;
+letter-spacing: -5px;
+}
+}
+

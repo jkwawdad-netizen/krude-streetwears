@@ -1,0 +1,176 @@
+.footer {
+  background: #111111;
+  color: #ffffff;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 30px;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 60px;
+}
+
+
+/* =========================
+   BRAND
+========================= */
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-logo {
+  width: 150px;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+.footer-brand p {
+  max-width: 350px;
+  margin: 0;
+
+  color: #bbbbbb;
+  line-height: 1.7;
+}
+
+
+/* =========================
+   LINKS + CONTACT
+========================= */
+
+.footer-links,
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-links h3,
+.footer-contact h3 {
+  margin: 0 0 8px;
+
+  font-size: 17px;
+  color: #ffd400;
+}
+
+.footer-links a {
+  color: #bbbbbb;
+  text-decoration: none;
+
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #ffd400;
+  transform: translateX(4px);
+}
+
+.footer-contact p {
+  margin: 0;
+  color: #bbbbbb;
+}
+
+
+/* =========================
+   SOCIAL LINKS
+========================= */
+
+.footer-socials {
+  display: flex;
+  gap: 18px;
+  margin-top: 8px;
+}
+
+.footer-socials a {
+  color: #ffffff;
+  text-decoration: none;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  transition: color 0.3s ease;
+}
+
+.footer-socials a:hover {
+  color: #ffd400;
+}
+
+
+/* =========================
+   FOOTER BOTTOM
+========================= */
+
+.footer-bottom {
+  border-top: 1px solid #333333;
+
+  padding: 20px 30px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  color: #999999;
+  font-size: 14px;
+}
+
+.footer-bottom p {
+  margin: 0;
+}
+
+.footer-bottom strong {
+  color: #ffd400;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    padding: 45px 20px;
+  }
+
+  .footer-logo {
+    width: 130px;
+  }
+
+  .footer-bottom {
+    padding: 20px;
+
+    flex-direction: column;
+    gap: 10px;
+
+    text-align: center;
+  }
+}
+
+
+/* =========================
+   GLOBAL RESET
+========================= */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+app-root {
+  display: block;
+  margin: 0;
+  padding: 0;
+}

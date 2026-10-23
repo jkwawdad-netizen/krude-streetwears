@@ -1,0 +1,351 @@
+<section class="shop-page">
+
+  <section class="shop-hero">
+
+    <div>
+
+      <p class="section-label">
+        KRŪDE / COLLECTION
+      </p>
+
+      <h1>
+        SHOP<br>
+        <span>THE DROP.</span>
+      </h1>
+
+      <p class="shop-intro">
+        Statement pieces for people who move differently.
+        Explore the latest Krūde streetwear collection.
+      </p>
+
+    </div>
+
+
+    <div class="drop-number">
+
+      <span>DROP</span>
+
+      <strong>01</strong>
+
+      <span>/ 2026</span>
+
+    </div>
+
+  </section>
+
+
+
+  <section class="shop-controls">
+
+    <div class="categories">
+
+      <button
+        type="button"
+        [class.active]="selectedCategory === 'ALL'"
+        (click)="selectCategory('ALL')"
+      >
+        ALL
+      </button>
+
+      <button
+        type="button"
+        [class.active]="selectedCategory === 'T-SHIRTS'"
+        (click)="selectCategory('T-SHIRTS')"
+      >
+        T-SHIRTS
+      </button>
+
+      <button
+        type="button"
+        [class.active]="selectedCategory === 'TOPS'"
+        (click)="selectCategory('TOPS')"
+      >
+        TOPS
+      </button>
+
+      <button
+        type="button"
+        [class.active]="selectedCategory === 'JEANS'"
+        (click)="selectCategory('JEANS')"
+      >
+        JEANS
+      </button>
+
+      <button
+        type="button"
+        [class.active]="selectedCategory === 'JOGGERS'"
+        (click)="selectCategory('JOGGERS')"
+      >
+        JOGGERS
+      </button>
+
+      <button
+        type="button"
+        [class.active]="selectedCategory === 'SHOES'"
+        (click)="selectCategory('SHOES')"
+      >
+        SHOES
+      </button>
+
+      <button
+        type="button"
+        [class.active]="selectedCategory === 'ACCESSORIES'"
+        (click)="selectCategory('ACCESSORIES')"
+      >
+        ACCESSORIES
+      </button>
+
+      <button
+        type="button"
+        [class.active]="selectedCategory === 'LADIES'"
+        (click)="selectCategory('LADIES')"
+      >
+        LADIES
+      </button>
+
+    </div>
+
+
+    <div class="sort">
+
+      <select>
+
+        <option>
+          Sort by
+        </option>
+
+        <option>
+          Newest
+        </option>
+
+        <option>
+          Price: Low to High
+        </option>
+
+        <option>
+          Price: High to Low
+        </option>
+
+      </select>
+
+    </div>
+
+  </section>
+
+
+
+  @if (isLoading) {
+
+    <section class="shop-status">
+
+      <p class="section-label">
+        KRŪDE / LOADING
+      </p>
+
+      <h2>
+        LOADING<br>
+        <span>THE DROP.</span>
+      </h2>
+
+      <p>
+        Please wait while we load the latest pieces.
+      </p>
+
+    </section>
+
+  }
+
+
+
+  @if (!isLoading && errorMessage) {
+
+    <section class="shop-status error">
+
+      <p class="section-label">
+        KRŪDE / ERROR
+      </p>
+
+      <h2>
+        COULD NOT LOAD<br>
+        <span>PRODUCTS.</span>
+      </h2>
+
+      <p>
+        {{ errorMessage }}
+      </p>
+
+    </section>
+
+  }
+
+
+
+  @if (!isLoading && !errorMessage) {
+
+    <section class="products">
+
+      @for (product of paginatedProducts; track product.id) {
+
+        <a
+          [routerLink]="['/product-details', product.id]"
+          class="product-card"
+        >
+
+          <div class="product-image">
+
+            <span class="product-number">
+              {{ product.id < 10 ? '0' + product.id : product.id }}
+            </span>
+
+
+            @if (product.stock <= 0) {
+
+              <span class="badge">
+                SOLD OUT
+              </span>
+
+            }
+
+
+            <img
+             [src]="backendUrl + product.image"
+              [alt]="product.name"
+            >
+
+
+            @if (product.stock > 0) {
+
+              <button
+                type="button"
+                class="quick-add"
+                (click)="quickAdd(product); $event.preventDefault(); $event.stopPropagation()"
+              >
+                QUICK ADD +
+              </button>
+
+            }
+
+          </div>
+
+
+
+          <div class="product-info">
+
+            <div>
+
+              <h2>
+                {{ product.name }}
+              </h2>
+
+              <p>
+                {{ product.description }}
+              </p>
+
+            </div>
+
+
+            <strong>
+              GH₵ {{ product.price }}
+            </strong>
+
+          </div>
+
+        </a>
+
+      }
+
+
+
+      @if (
+        products.length > 0 &&
+        filteredProducts.length === 0
+      ) {
+
+        <div class="no-products">
+
+          <p class="section-label">
+            KRŪDE / 00
+          </p>
+
+          <h2>
+            NO PRODUCTS<br>
+            <span>YET.</span>
+          </h2>
+
+          <p>
+            New pieces are coming soon.
+          </p>
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+
+
+  @if (!isLoading && !errorMessage && totalPages > 1) {
+
+    <div class="pagination">
+
+      <button
+        type="button"
+        class="pagination-arrow"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+      >
+        ←
+      </button>
+
+
+      @for (page of pageNumbers; track page) {
+
+        <button
+          type="button"
+          class="pagination-number"
+          [class.active]="currentPage === page"
+          (click)="goToPage(page)"
+        >
+          {{ page < 10 ? '0' + page : page }}
+        </button>
+
+      }
+
+
+      <button
+        type="button"
+        class="pagination-arrow"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+      >
+        →
+      </button>
+
+    </div>
+
+  }
+
+
+
+  <section class="shop-statement">
+
+    <p class="section-label">
+      KRŪDE / 2026
+    </p>
+
+    <h2>
+      FIND YOUR<br>
+      <span>UNIFORM.</span>
+    </h2>
+
+    <p>
+      Wear what represents you.
+      No rules. No limits. Just attitude.
+    </p>
+
+  </section>
+
+</section>
+

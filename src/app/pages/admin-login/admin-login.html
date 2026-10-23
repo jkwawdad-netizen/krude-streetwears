@@ -1,0 +1,77 @@
+<div class="admin-login-page">
+
+  <div class="admin-login-card">
+
+    <div class="admin-logo">
+      KRŪDE
+      <span>STREETWEARS</span>
+    </div>
+
+    <div class="login-heading">
+      <p>ADMIN PANEL</p>
+      <h1>WELCOME BACK.</h1>
+      <span>Sign in to manage your store.</span>
+    </div>
+
+    <form (ngSubmit)="login()">
+
+      <div class="form-group">
+
+        <label for="username">
+          USERNAME
+        </label>
+
+        <input
+          id="username"
+          type="text"
+          name="username"
+          [(ngModel)]="username"
+          placeholder="Enter username"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="password">
+          PASSWORD
+        </label>
+
+        <input
+          id="password"
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Enter password"
+        >
+
+      </div>
+
+
+      <p
+        *ngIf="errorMessage"
+        class="login-error"
+      >
+        {{ errorMessage }}
+      </p>
+
+
+      <button
+        type="submit"
+        class="login-btn"
+        [disabled]="isLoading"
+      >
+        {{ isLoading ? 'SIGNING IN...' : 'SIGN IN →' }}
+      </button>
+
+    </form>
+
+
+    <a routerLink="/" class="back-home">
+      ← BACK TO STORE
+    </a>
+
+  </div>
+
+</div>

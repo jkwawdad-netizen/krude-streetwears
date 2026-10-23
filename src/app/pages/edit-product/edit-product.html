@@ -1,0 +1,367 @@
+
+<div class="edit-page">
+
+  <!-- HEADER -->
+
+  <header class="edit-header">
+
+    <div>
+      <p class="eyebrow">KRŪDE STREETWEARS</p>
+
+      <h1>Edit Product</h1>
+
+      <p class="subtitle">
+        Update your product information and keep your catalogue current.
+      </p>
+    </div>
+
+    <a
+      routerLink="/admin/dashboard"
+      class="back-btn"
+    >
+      ← Back to Dashboard
+    </a>
+
+  </header>
+
+
+  <!-- ERROR -->
+
+  @if (errorMessage) {
+
+    <div class="message error-message">
+      {{ errorMessage }}
+    </div>
+
+  }
+
+
+  <!-- EDIT FORM -->
+
+  <form
+    class="edit-form"
+    (ngSubmit)="updateProduct()"
+  >
+
+    <!-- PRODUCT INFORMATION -->
+
+    <section class="form-section">
+
+      <div class="section-heading">
+
+        <p class="eyebrow">
+          PRODUCT INFORMATION
+        </p>
+
+        <h2>
+          Basic Details
+        </h2>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <!-- NAME -->
+
+        <div class="form-group full-width">
+
+          <label for="name">
+            Product Name
+          </label>
+
+          <input
+            id="name"
+            type="text"
+            name="name"
+            [(ngModel)]="product.name"
+            placeholder="e.g. Krude Oversized Tee"
+            required
+          />
+
+        </div>
+
+
+        <!-- PRICE -->
+
+        <div class="form-group">
+
+          <label for="price">
+            Price (GH₵)
+          </label>
+
+          <input
+            id="price"
+            type="number"
+            name="price"
+            [(ngModel)]="product.price"
+            min="0"
+            required
+          />
+
+        </div>
+
+
+        <!-- CATEGORY -->
+
+        <div class="form-group">
+
+          <label for="category">
+            Category
+          </label>
+
+          <select
+            id="category"
+            name="category"
+            [(ngModel)]="product.category"
+            required
+          >
+
+            <option value="">
+              Select category
+            </option>
+
+            <option value="T-Shirts">
+              T-Shirts
+            </option>
+
+            <option value="Joggers">
+              Joggers
+            </option>
+
+            <option value="Jeans">
+              Jeans
+            </option>
+
+            <option value="Pants">
+              Pants
+            </option>
+
+            <option value="Sneakers">
+              Sneakers
+            </option>
+
+            <option value="Crocs">
+              Crocs
+            </option>
+
+            <option value="Watches">
+              Watches
+            </option>
+
+            <option value="Dresses">
+              Dresses
+            </option>
+
+            <option value="Accessories">
+              Accessories
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- STOCK -->
+
+        <div class="form-group">
+
+          <label for="stock">
+            Stock Quantity
+          </label>
+
+          <input
+            id="stock"
+            type="number"
+            name="stock"
+            [(ngModel)]="product.stock"
+            min="0"
+            required
+          />
+
+        </div>
+
+
+        <!-- SIZES -->
+
+        <div class="form-group">
+
+          <label for="sizes">
+            Available Sizes
+          </label>
+
+          <input
+            id="sizes"
+            type="text"
+            name="sizes"
+            [(ngModel)]="sizesInput"
+            placeholder="S, M, L, XL"
+          />
+
+          <small>
+            Separate sizes with commas.
+          </small>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="form-group full-width">
+
+          <label for="description">
+            Description
+          </label>
+
+          <textarea
+            id="description"
+            name="description"
+            [(ngModel)]="product.description"
+            rows="5"
+            placeholder="Describe this product..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- IMAGE -->
+
+    <section class="form-section">
+
+      <div class="section-heading">
+
+        <p class="eyebrow">
+          PRODUCT IMAGE
+        </p>
+
+        <h2>
+          Update Image
+        </h2>
+
+      </div>
+
+
+      <div class="image-area">
+
+        <!-- CURRENT IMAGE -->
+
+        <div class="current-image">
+
+          @if (product.image) {
+
+            <img
+              [src]="backendUrl + product.image"
+              [alt]="product.name"
+            />
+
+          }
+
+          <span>
+            Current Image
+          </span>
+
+        </div>
+
+
+        <!-- UPLOAD -->
+
+        <div class="upload-area">
+
+          <label
+            for="image"
+            class="upload-box"
+          >
+
+            <span class="upload-icon">
+              ↑
+            </span>
+
+            <strong>
+              Choose a new image
+            </strong>
+
+            <small>
+              JPG, JPEG, PNG or WEBP
+            </small>
+
+
+            @if (selectedFileName) {
+
+              <span class="selected-file">
+                {{ selectedFileName }}
+              </span>
+
+            }
+
+          </label>
+
+
+          <input
+            id="image"
+            type="file"
+            accept="image/*"
+            (change)="onFileSelected($event)"
+          />
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SUCCESS -->
+
+    @if (successMessage) {
+
+      <div class="message success-message">
+        {{ successMessage }}
+      </div>
+
+    }
+
+
+    <!-- ACTIONS -->
+
+    <div class="form-actions">
+
+      <a
+        routerLink="/admin/dashboard"
+        class="cancel-btn"
+      >
+        Cancel
+      </a>
+
+
+      <button
+        type="submit"
+        class="save-btn"
+        [disabled]="isSaving"
+      >
+
+        @if (isSaving) {
+
+          Saving Changes...
+
+        } @else {
+
+          Save Changes
+
+        }
+
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
+
