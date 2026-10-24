@@ -224,3 +224,20 @@
     height: 38px;
   }
 }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 45px;
+  text-decoration: none;
+}
+
+.logo img {
+  width: 75px;
+  height: 40px;
+  max-width: 75px;
+  max-height: 40px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
