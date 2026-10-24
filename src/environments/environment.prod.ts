@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'REPLACE_WITH_YOUR_RENDER_BACKEND_URL/api',
-  backendUrl: 'REPLACE_WITH_YOUR_RENDER_BACKEND_URL'
+  apiUrl: 'https://krude-streetwears.onrender.com/api',
+  backendUrl: 'https://krude-streetwears.onrender.com'
 };

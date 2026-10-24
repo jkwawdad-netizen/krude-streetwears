@@ -62,12 +62,12 @@
         {{ product.id < 10 ? '0' + product.id : product.id }}
       </span>
 
-
       <img
-        [src]="backendUrl + product.image"
+        [src]="product.image?.startsWith('http')
+          ? product.image
+          : backendUrl + product.image"
         [alt]="product.name"
       >
-
 
       @if (product.stock <= 0) {
 
@@ -96,24 +96,19 @@
         ← BACK TO SHOP
       </a>
 
-
       <p class="section-label">
         KRŪDE / {{ product.category }}
       </p>
-
 
       <h1>
         {{ product.name }}
       </h1>
 
-
       <div class="product-price">
         GH₵ {{ product.price }}
       </div>
 
-
       <div class="product-line"></div>
-
 
       <p class="product-description">
         {{ product.description }}
@@ -136,7 +131,6 @@
             </span>
 
           </div>
-
 
           <div class="sizes">
 
@@ -170,7 +164,6 @@
 
         </div>
 
-
         <div class="quantity">
 
           <button
@@ -180,11 +173,9 @@
             −
           </button>
 
-
           <span>
             {{ quantity }}
           </span>
-
 
           <button
             type="button"
@@ -256,11 +247,9 @@
 
         </div>
 
-
         <p>
           {{ product.description }}
         </p>
-
 
         <div class="detail-item">
 
@@ -273,7 +262,6 @@
           </strong>
 
         </div>
-
 
         <p>
           Delivery available across Ghana.
@@ -288,7 +276,6 @@
 
 
   <!-- BOTTOM STATEMENT -->
-
   <section class="product-statement">
 
     <p>
@@ -303,4 +290,3 @@
   </section>
 
 }
-

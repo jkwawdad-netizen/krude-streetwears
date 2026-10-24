@@ -1,8 +1,8 @@
+
 <section class="cart-page">
 
   <!-- HEADER -->
   <section class="cart-hero">
-
     <div>
       <p class="section-label">KRŪDE / CART</p>
 
@@ -16,9 +16,7 @@
       <span>ITEMS</span>
       <strong>{{ cartItems.length }}</strong>
     </div>
-
   </section>
-
 
   <!-- CART CONTENT -->
   <section class="cart-content">
@@ -32,18 +30,17 @@
       >
 
         <div class="cart-image">
-
           <img
-  [src]="backendUrl + item.image"
-  [alt]="item.name"
->
+            [src]="item.image?.startsWith('http')
+              ? item.image
+              : backendUrl + item.image"
+            [alt]="item.name"
+          >
         </div>
-
 
         <div class="cart-info">
 
           <div>
-
             <p class="item-number">
               KRŪDE / {{ item.id }}
             </p>
@@ -59,16 +56,14 @@
             <p class="item-price">
               GH₵ {{ item.price }}
             </p>
-
           </div>
-
 
           <!-- QUANTITY -->
           <div class="cart-actions">
 
             <div class="quantity">
-
               <button
+                type="button"
                 (click)="decreaseQuantity(item.id, item.size)"
               >
                 −
@@ -79,15 +74,15 @@
               </span>
 
               <button
+                type="button"
                 (click)="increaseQuantity(item.id, item.size)"
               >
                 +
               </button>
-
             </div>
 
-
             <button
+              type="button"
               class="remove-btn"
               (click)="removeItem(item.id, item.size)"
             >
@@ -95,26 +90,20 @@
             </button>
 
           </div>
-
         </div>
-
 
         <!-- ITEM TOTAL -->
         <div class="item-total">
-
           GH₵ {{ item.price * item.quantity }}
-
         </div>
 
       </div>
-
 
       <!-- EMPTY CART -->
       <div
         class="empty-cart"
         *ngIf="cartItems.length === 0"
       >
-
         <p class="section-label">
           KRŪDE / 00
         </p>
@@ -134,52 +123,42 @@
         >
           EXPLORE THE DROP →
         </a>
-
       </div>
 
     </div>
-
 
     <!-- SUMMARY -->
     <aside
       class="cart-summary"
       *ngIf="cartItems.length > 0"
     >
-
       <p class="section-label">
         ORDER SUMMARY
       </p>
 
       <div class="summary-line">
-
         <span>SUBTOTAL</span>
 
         <strong>
           GH₵ {{ getTotal() }}
         </strong>
-
       </div>
 
       <div class="summary-line">
-
         <span>DELIVERY</span>
 
         <span>
           CALCULATED AT CHECKOUT
         </span>
-
       </div>
 
       <div class="summary-line total">
-
         <span>TOTAL</span>
 
         <strong>
           GH₵ {{ getTotal() }}
         </strong>
-
       </div>
-
 
       <a
         routerLink="/checkout"
@@ -188,7 +167,6 @@
         PROCEED TO CHECKOUT
         <span>→</span>
       </a>
-
 
       <a
         routerLink="/shop"
@@ -203,9 +181,7 @@
 
 </section>
 
-
 <!-- BOTTOM STATEMENT -->
-
 <section class="cart-statement">
 
   <p>KRŪDE / 2026</p>

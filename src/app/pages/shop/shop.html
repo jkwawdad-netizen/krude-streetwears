@@ -208,9 +208,11 @@
 
 
             <img
-             [src]="backendUrl + product.image"
-              [alt]="product.name"
-            >
+  [src]="product.image?.startsWith('http')
+    ? product.image
+    : backendUrl + product.image"
+  [alt]="product.name"
+>
 
 
             @if (product.stock > 0) {

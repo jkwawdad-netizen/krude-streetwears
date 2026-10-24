@@ -2,7 +2,6 @@
 <div class="edit-page">
 
   <!-- HEADER -->
-
   <header class="edit-header">
 
     <div>
@@ -26,7 +25,6 @@
 
 
   <!-- ERROR -->
-
   @if (errorMessage) {
 
     <div class="message error-message">
@@ -37,14 +35,12 @@
 
 
   <!-- EDIT FORM -->
-
   <form
     class="edit-form"
     (ngSubmit)="updateProduct()"
   >
 
     <!-- PRODUCT INFORMATION -->
-
     <section class="form-section">
 
       <div class="section-heading">
@@ -63,7 +59,6 @@
       <div class="form-grid">
 
         <!-- NAME -->
-
         <div class="form-group full-width">
 
           <label for="name">
@@ -83,7 +78,6 @@
 
 
         <!-- PRICE -->
-
         <div class="form-group">
 
           <label for="price">
@@ -103,7 +97,6 @@
 
 
         <!-- CATEGORY -->
-
         <div class="form-group">
 
           <label for="category">
@@ -121,45 +114,16 @@
               Select category
             </option>
 
-            <option value="T-Shirts">
-              T-Shirts
-            </option>
-
-            <option value="Joggers">
-              Joggers
-            </option>
-
-            <option value="Jeans">
-              Jeans
-            </option>
-
-            <option value="Pants">
-              Pants
-            </option>
-
-            <option value="Sneakers">
-              Sneakers
-            </option>
-
-            <option value="Crocs">
-              Crocs
-            </option>
-
-            <option value="Watches">
-              Watches
-            </option>
-
-            <option value="Dresses">
-              Dresses
-            </option>
-
-            <option value="Accessories">
-              Accessories
-            </option>
-
-            <option value="Other">
-              Other
-            </option>
+            <option value="T-Shirts">T-Shirts</option>
+            <option value="Joggers">Joggers</option>
+            <option value="Jeans">Jeans</option>
+            <option value="Pants">Pants</option>
+            <option value="Sneakers">Sneakers</option>
+            <option value="Crocs">Crocs</option>
+            <option value="Watches">Watches</option>
+            <option value="Dresses">Dresses</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Other">Other</option>
 
           </select>
 
@@ -167,7 +131,6 @@
 
 
         <!-- STOCK -->
-
         <div class="form-group">
 
           <label for="stock">
@@ -187,7 +150,6 @@
 
 
         <!-- SIZES -->
-
         <div class="form-group">
 
           <label for="sizes">
@@ -210,7 +172,6 @@
 
 
         <!-- DESCRIPTION -->
-
         <div class="form-group full-width">
 
           <label for="description">
@@ -233,7 +194,6 @@
 
 
     <!-- IMAGE -->
-
     <section class="form-section">
 
       <div class="section-heading">
@@ -252,13 +212,14 @@
       <div class="image-area">
 
         <!-- CURRENT IMAGE -->
-
         <div class="current-image">
 
           @if (product.image) {
 
             <img
-              [src]="backendUrl + product.image"
+              [src]="product.image.startsWith('http')
+                ? product.image
+                : backendUrl + product.image"
               [alt]="product.name"
             />
 
@@ -272,7 +233,6 @@
 
 
         <!-- UPLOAD -->
-
         <div class="upload-area">
 
           <label
@@ -291,7 +251,6 @@
             <small>
               JPG, JPEG, PNG or WEBP
             </small>
-
 
             @if (selectedFileName) {
 
@@ -319,7 +278,6 @@
 
 
     <!-- SUCCESS -->
-
     @if (successMessage) {
 
       <div class="message success-message">
@@ -330,7 +288,6 @@
 
 
     <!-- ACTIONS -->
-
     <div class="form-actions">
 
       <a
@@ -339,7 +296,6 @@
       >
         Cancel
       </a>
-
 
       <button
         type="submit"
@@ -364,4 +320,3 @@
   </form>
 
 </div>
-

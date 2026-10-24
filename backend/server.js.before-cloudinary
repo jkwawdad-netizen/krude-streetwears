@@ -1,0 +1,1094 @@
+
+require('dotenv').config();
+
+const express = require('express');
+const cors = require('cors');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const supabase = require('./supabase');
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// ===============================
+// FILE PATHS
+// ===============================
+
+const productsFile = path.join(
+  __dirname,
+  'data',
+  'products.json'
+);
+
+const ordersFile = path.join(
+  __dirname,
+  'data',
+  'orders.json'
+);
+
+const uploadsFolder = path.join(
+  __dirname,
+  'uploads'
+);
+
+const adminFile = path.join(
+  __dirname,
+  'admin',
+  'data',
+  'admin.json'
+);
+
+const JWT_SECRET = process.env.JWT_SECRET;
+// ===============================
+// PAYSTACK CONFIGURATION
+// ===============================
+
+const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
+
+const PAYSTACK_CALLBACK_URL =
+  process.env.PAYSTACK_CALLBACK_URL ||
+  'http://localhost:4200/payment/callback';
+
+if (!JWT_SECRET) {
+  throw new Error(
+    'JWT_SECRET is missing from the environment configuration.'
+  );
+}
+
+// ===============================
+// MAKE SURE FOLDERS EXIST
+// ===============================
+
+const dataFolder = path.join(__dirname, 'data');
+
+if (!fs.existsSync(dataFolder)) {
+  fs.mkdirSync(dataFolder, {
+    recursive: true
+  });
+}
+
+if (!fs.existsSync(uploadsFolder)) {
+  fs.mkdirSync(uploadsFolder, {
+    recursive: true
+  });
+}
+
+if (!fs.existsSync(productsFile)) {
+  fs.writeFileSync(productsFile, '[]');
+}
+
+if (!fs.existsSync(ordersFile)) {
+  fs.writeFileSync(ordersFile, '[]');
+}
+
+// ===============================
+// SERVE PRODUCT IMAGES
+// ===============================
+
+app.use(
+  '/uploads',
+  express.static(uploadsFolder)
+);
+
+// ===============================
+// IMAGE UPLOAD SETTINGS
+// ===============================
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsFolder);
+  },
+
+  filename: (req, file, cb) => {
+    const extension = path.extname(file.originalname);
+
+    const fileName =
+      Date.now() +
+      '-' +
+      Math.round(Math.random() * 1E9) +
+      extension;
+
+    cb(null, fileName);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/webp'
+  ];
+
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(
+      new Error(
+        'Only JPG, JPEG, PNG and WEBP images are allowed.'
+      )
+    );
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+
+  limits: {
+    fileSize: 5 * 1024 * 1024
+  }
+});
+
+// ===============================
+// PRODUCT HELPERS
+// ===============================
+
+function getProducts() {
+  const data = fs.readFileSync(productsFile, 'utf8');
+  return JSON.parse(data);
+}
+
+function saveProducts(products) {
+  fs.writeFileSync(
+    productsFile,
+    JSON.stringify(products, null, 2)
+  );
+}
+
+// ===============================
+// ORDER HELPERS
+// ===============================
+
+function getOrders() {
+  const data = fs.readFileSync(ordersFile, 'utf8');
+  return JSON.parse(data);
+}
+
+function saveOrders(orders) {
+  fs.writeFileSync(
+    ordersFile,
+    JSON.stringify(orders, null, 2)
+  );
+}
+
+// ===============================
+// ADMIN AUTHENTICATION MIDDLEWARE
+// ===============================
+
+function authenticateAdmin(req, res, next) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    return res.status(401).json({
+      message: 'Authentication required'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({
+      message: 'Invalid authentication token'
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({
+        message: 'Admin access required'
+      });
+    }
+
+    req.admin = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      message: 'Invalid or expired token'
+    });
+  }
+}
+
+// ===============================
+// GET ALL PRODUCTS
+// PUBLIC - SUPABASE
+// ===============================
+
+app.get('/api/products', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('id', { ascending: true });
+
+    if (error) {
+      console.error('GET PRODUCTS ERROR:', error.message);
+      return res.status(500).json({
+        message: 'Could not load products'
+      });
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error('GET PRODUCTS ERROR:', error);
+    res.status(500).json({
+      message: 'Could not load products'
+    });
+  }
+});
+
+// ===============================
+// GET ONE PRODUCT
+// PUBLIC - SUPABASE
+// ===============================
+
+app.get('/api/products/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
+        message: 'Invalid product ID'
+      });
+    }
+
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('GET PRODUCT ERROR:', error.message);
+      return res.status(500).json({
+        message: 'Could not load product'
+      });
+    }
+
+    if (!data) {
+      return res.status(404).json({
+        message: 'Product not found'
+      });
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error('GET PRODUCT ERROR:', error);
+    res.status(500).json({
+      message: 'Could not load product'
+    });
+  }
+});
+
+// ===============================
+// ADD PRODUCT
+// ADMIN ONLY
+// ===============================
+
+app.post(
+  '/api/products',
+  authenticateAdmin,
+  upload.single('image'),
+  (req, res) => {
+    try {
+      const products = getProducts();
+
+      const newId = products.length > 0
+        ? Math.max(...products.map(product => product.id)) + 1
+        : 1;
+
+      let sizes = [];
+
+      if (req.body.sizes) {
+        try {
+          sizes = JSON.parse(req.body.sizes);
+        } catch {
+          sizes = req.body.sizes
+            .split(',')
+            .map(size => size.trim());
+        }
+      }
+
+      const newProduct = {
+        id: newId,
+        name: req.body.name || '',
+        price: Number(req.body.price) || 0,
+        category: req.body.category || '',
+
+        image: req.file
+          ? `/uploads/${req.file.filename}`
+          : '',
+
+        sizes: sizes,
+        stock: Number(req.body.stock) || 0,
+        description: req.body.description || ''
+      };
+
+      products.push(newProduct);
+      saveProducts(products);
+
+      res.status(201).json({
+        message: 'Product added successfully',
+        product: newProduct
+      });
+    } catch (error) {
+      console.error('ADD PRODUCT ERROR:', error);
+
+      res.status(500).json({
+        message: 'Could not add product'
+      });
+    }
+  }
+);
+
+// ===============================
+// UPDATE PRODUCT
+// ADMIN ONLY
+// ===============================
+
+app.put(
+  '/api/products/:id',
+  authenticateAdmin,
+  upload.single('image'),
+  (req, res) => {
+    try {
+      const products = getProducts();
+      const id = Number(req.params.id);
+
+      const productIndex = products.findIndex(
+        product => product.id === id
+      );
+
+      if (productIndex === -1) {
+        return res.status(404).json({
+          message: 'Product not found'
+        });
+      }
+
+      const existingProduct = products[productIndex];
+
+      let sizes = existingProduct.sizes || [];
+
+      if (req.body.sizes) {
+        try {
+          sizes = JSON.parse(req.body.sizes);
+        } catch {
+          sizes = req.body.sizes
+            .split(',')
+            .map(size => size.trim());
+        }
+      }
+
+      let image = existingProduct.image;
+
+      if (req.file) {
+        image = `/uploads/${req.file.filename}`;
+      }
+
+      const updatedProduct = {
+        id: existingProduct.id,
+
+        name:
+          req.body.name ??
+          existingProduct.name,
+
+        price:
+          req.body.price !== undefined
+            ? Number(req.body.price)
+            : existingProduct.price,
+
+        category:
+          req.body.category ??
+          existingProduct.category,
+
+        image: image,
+        sizes: sizes,
+
+        stock:
+          req.body.stock !== undefined
+            ? Number(req.body.stock)
+            : existingProduct.stock,
+
+        description:
+          req.body.description ??
+          existingProduct.description
+      };
+
+      products[productIndex] = updatedProduct;
+      saveProducts(products);
+
+      res.json({
+        message: 'Product updated successfully',
+        product: updatedProduct
+      });
+    } catch (error) {
+      console.error('UPDATE PRODUCT ERROR:', error);
+
+      res.status(500).json({
+        message: 'Could not update product'
+      });
+    }
+  }
+);
+
+// ===============================
+// DELETE PRODUCT
+// ADMIN ONLY
+// ===============================
+
+app.delete(
+  '/api/products/:id',
+  authenticateAdmin,
+  (req, res) => {
+    try {
+      const products = getProducts();
+      const id = Number(req.params.id);
+
+      const productIndex = products.findIndex(
+        product => product.id === id
+      );
+
+      if (productIndex === -1) {
+        return res.status(404).json({
+          message: 'Product not found'
+        });
+      }
+
+      const deletedProduct = products[productIndex];
+
+      if (
+        deletedProduct.image &&
+        deletedProduct.image.startsWith('/uploads/')
+      ) {
+        const imageName = path.basename(
+          deletedProduct.image
+        );
+
+        const imagePath = path.join(
+          uploadsFolder,
+          imageName
+        );
+
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+      }
+
+      products.splice(productIndex, 1);
+      saveProducts(products);
+
+      res.json({
+        message: 'Product deleted successfully',
+        product: deletedProduct
+      });
+    } catch (error) {
+      console.error('DELETE PRODUCT ERROR:', error);
+
+      res.status(500).json({
+        message: 'Could not delete product'
+      });
+    }
+  }
+);
+
+// ===============================
+// GET ALL ORDERS
+// ADMIN ONLY
+// ===============================
+
+app.get(
+  '/api/orders',
+  authenticateAdmin,
+  (req, res) => {
+    try {
+      const orders = getOrders();
+      res.json(orders);
+    } catch (error) {
+      console.error('GET ORDERS ERROR:', error);
+
+      res.status(500).json({
+        message: 'Could not load orders'
+      });
+    }
+  }
+);
+
+// ===============================
+// GET ONE ORDER
+// ADMIN ONLY
+// ===============================
+
+app.get(
+  '/api/orders/:id',
+  authenticateAdmin,
+  (req, res) => {
+    try {
+      const orders = getOrders();
+      const id = Number(req.params.id);
+
+      const order = orders.find(
+        order => Number(order.id) === id
+      );
+
+      if (!order) {
+        return res.status(404).json({
+          message: 'Order not found'
+        });
+      }
+
+      res.json(order);
+    } catch (error) {
+      console.error('GET ORDER ERROR:', error);
+
+      res.status(500).json({
+        message: 'Could not load order'
+      });
+    }
+  }
+);
+
+// ===============================
+// CREATE ORDER
+// PUBLIC
+// SAVES WHATSAPP CONSENT
+// ===============================
+
+app.post('/api/orders', (req, res) => {
+  try {
+    const orders = getOrders();
+
+    const newId = orders.length > 0
+      ? Math.max(
+          ...orders.map(order => Number(order.id) || 0)
+        ) + 1
+      : 1;
+
+    // Only an explicit true value counts as consent.
+    const whatsappOptIn =
+      req.body.whatsappOptIn === true ||
+      req.body.customer?.whatsappOptIn === true;
+
+    const newOrder = {
+      id: newId,
+
+      customer: {
+        firstName: req.body.customer?.firstName || '',
+        lastName: req.body.customer?.lastName || '',
+        phone: req.body.customer?.phone || '',
+        email: req.body.customer?.email || '',
+        address: req.body.customer?.address || '',
+        city: req.body.customer?.city || '',
+        region: req.body.customer?.region || '',
+        whatsappOptIn: whatsappOptIn
+      },
+
+      // The admin dashboard also checks this top-level field.
+      whatsappOptIn: whatsappOptIn,
+
+      items: Array.isArray(req.body.items)
+        ? req.body.items
+        : [],
+
+      subtotal: Number(req.body.subtotal) || 0,
+      deliveryFee: Number(req.body.deliveryFee) || 0,
+      total: Number(req.body.total) || 0,
+
+      paymentMethod:
+        req.body.paymentMethod ||
+        'Payment on confirmation',
+
+      deliveryMethod:
+        req.body.deliveryMethod ||
+        'Standard Delivery',
+
+      status: 'Pending',
+      createdAt: new Date().toISOString()
+    };
+
+    orders.push(newOrder);
+    saveOrders(orders);
+
+    res.status(201).json({
+      message: 'Order created successfully',
+      order: newOrder
+    });
+  } catch (error) {
+    console.error('CREATE ORDER ERROR:', error);
+
+    res.status(500).json({
+      message: 'Could not create order'
+    });
+  }
+});
+
+// ===============================
+// UPDATE ORDER
+// ADMIN ONLY
+// PRESERVES EXISTING ORDER FIELDS
+// ===============================
+
+app.put(
+  '/api/orders/:id',
+  authenticateAdmin,
+  (req, res) => {
+    try {
+      const orders = getOrders();
+      const id = Number(req.params.id);
+
+      const orderIndex = orders.findIndex(
+        order => Number(order.id) === id
+      );
+
+      if (orderIndex === -1) {
+        return res.status(404).json({
+          message: 'Order not found'
+        });
+      }
+
+      const existingOrder = orders[orderIndex];
+
+      // Preserve existing data while allowing the admin
+      // to update delivery details, payment and order status.
+      const updatedOrder = {
+        ...existingOrder,
+
+        status:
+          req.body.status ??
+          existingOrder.status,
+
+        rider:
+          req.body.rider !== undefined
+            ? req.body.rider
+            : existingOrder.rider,
+
+        deliveryFee:
+          req.body.deliveryFee !== undefined
+            ? Number(req.body.deliveryFee)
+            : existingOrder.deliveryFee,
+
+        total:
+          req.body.total !== undefined
+            ? Number(req.body.total)
+            : existingOrder.total,
+
+        estimatedDelivery:
+          req.body.estimatedDelivery !== undefined
+            ? req.body.estimatedDelivery
+            : existingOrder.estimatedDelivery,
+
+        paymentMethod:
+          req.body.paymentMethod !== undefined
+            ? req.body.paymentMethod
+            : existingOrder.paymentMethod,
+
+        paymentStatus:
+          req.body.paymentStatus !== undefined
+            ? req.body.paymentStatus
+            : existingOrder.paymentStatus,
+
+        paymentInstructions:
+          req.body.paymentInstructions !== undefined
+            ? req.body.paymentInstructions
+            : existingOrder.paymentInstructions
+      };
+
+      orders[orderIndex] = updatedOrder;
+      saveOrders(orders);
+
+      res.json({
+        message: 'Order updated successfully',
+        order: updatedOrder
+      });
+    } catch (error) {
+      console.error('UPDATE ORDER ERROR:', error);
+
+      res.status(500).json({
+        message: 'Could not update order'
+      });
+    }
+  }
+);
+
+// ===============================
+// DELETE ORDER
+// ADMIN ONLY
+// ===============================
+
+app.delete(
+  '/api/orders/:id',
+  authenticateAdmin,
+  (req, res) => {
+    try {
+      const orders = getOrders();
+      const id = Number(req.params.id);
+
+      const orderIndex = orders.findIndex(
+        order => Number(order.id) === id
+      );
+
+      if (orderIndex === -1) {
+        return res.status(404).json({
+          message: 'Order not found'
+        });
+      }
+
+      const deletedOrder = orders[orderIndex];
+
+      orders.splice(orderIndex, 1);
+      saveOrders(orders);
+
+      res.json({
+        message: 'Order deleted successfully',
+        order: deletedOrder
+      });
+    } catch (error) {
+      console.error('DELETE ORDER ERROR:', error);
+
+      res.status(500).json({
+        message: 'Could not delete order'
+      });
+    }
+  }
+);
+
+// ===============================
+// ADMIN LOGIN
+// ===============================
+
+app.post('/api/admin/login', (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({
+        message: 'Username and password are required'
+      });
+    }
+
+    if (!fs.existsSync(adminFile)) {
+      console.error('ADMIN FILE NOT FOUND:', adminFile);
+
+      return res.status(500).json({
+        message: 'Admin configuration file was not found'
+      });
+    }
+
+    const admin = JSON.parse(
+      fs.readFileSync(adminFile, 'utf8')
+    );
+
+    if (username !== admin.username) {
+      return res.status(401).json({
+        message: 'Invalid username or password'
+      });
+    }
+
+    const passwordMatch = bcrypt.compareSync(
+      password,
+      admin.password
+    );
+
+    if (!passwordMatch) {
+      return res.status(401).json({
+        message: 'Invalid username or password'
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        username: admin.username,
+        role: 'admin'
+      },
+      JWT_SECRET,
+      {
+        expiresIn: '8h'
+      }
+    );
+
+    res.json({
+      message: 'Login successful',
+      token: token,
+
+      admin: {
+        username: admin.username,
+        role: 'admin'
+      }
+    });
+  } catch (error) {
+    console.error('ADMIN LOGIN ERROR:', error);
+
+    res.status(500).json({
+      message: 'Admin login failed. Check the backend terminal.'
+    });
+  }
+});
+
+ // ===============================
+ // PAYSTACK: INITIALIZE PAYMENT
+ // PUBLIC - AMOUNT COMES FROM SAVED ORDER
+ // ===============================
+
+app.post('/api/payments/paystack/initialize', async (req, res) => {
+  try {
+    if (!PAYSTACK_SECRET_KEY) {
+      return res.status(503).json({
+        message: 'Online payments are not configured yet.'
+      });
+    }
+
+    const orderId = Number(req.body.orderId);
+
+    if (!Number.isSafeInteger(orderId) || orderId <= 0) {
+      return res.status(400).json({
+        message: 'A valid order ID is required.'
+      });
+    }
+
+    const orders = getOrders();
+    const order = orders.find(item => Number(item.id) === orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        message: 'Order not found.'
+      });
+    }
+
+    if (order.paymentMethod !== 'Paystack') {
+      return res.status(400).json({
+        message: 'This order was not created for Paystack payment.'
+      });
+    }
+
+    if (order.paymentStatus === 'paid') {
+      return res.status(409).json({
+        message: 'This order has already been paid.'
+      });
+    }
+
+    const email = String(order.customer?.email || '').trim();
+
+    if (!email) {
+      return res.status(400).json({
+        message: 'A valid customer email is required for online payment.'
+      });
+    }
+
+    // Charge the saved merchandise subtotal only.
+    // Delivery is excluded until the shop confirms its fee.
+    const amountInPesewas = Math.round(Number(order.subtotal) * 100);
+
+    if (!Number.isSafeInteger(amountInPesewas) || amountInPesewas <= 0) {
+      return res.status(400).json({
+        message: 'The order subtotal is invalid for online payment.'
+      });
+    }
+
+    const paystackResponse = await fetch(
+      'https://api.paystack.co/transaction/initialize',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email,
+          amount: String(amountInPesewas),
+          currency: 'GHS',
+          callback_url: PAYSTACK_CALLBACK_URL,
+          metadata: {
+            orderId: order.id,
+            customerName:
+              `${order.customer?.firstName || ''} ${order.customer?.lastName || ''}`.trim()
+          }
+        })
+      }
+    );
+
+    const result = await paystackResponse.json();
+
+    if (!paystackResponse.ok || !result.status || !result.data?.authorization_url) {
+      console.error('PAYSTACK INITIALIZE ERROR:', result);
+
+      return res.status(502).json({
+        message: result.message || 'Could not initialize Paystack payment.'
+      });
+    }
+
+    // Save the reference returned by Paystack.
+    order.paymentReference = result.data.reference;
+    order.paymentStatus = 'pending';
+    order.paymentMethod = 'Paystack';
+    order.paystackAmount = amountInPesewas;
+    saveOrders(orders);
+
+    return res.json({
+      message: 'Payment initialized successfully.',
+      authorizationUrl: result.data.authorization_url,
+      reference: result.data.reference
+    });
+  } catch (error) {
+    console.error('PAYSTACK INITIALIZE ERROR:', error);
+
+    return res.status(500).json({
+      message: 'Could not start online payment.'
+    });
+  }
+});
+
+// ===============================
+// PAYSTACK: VERIFY PAYMENT
+// PUBLIC CALLBACK, VERIFIED SERVER-SIDE
+// ===============================
+
+app.get('/api/payments/paystack/verify/:reference', async (req, res) => {
+  try {
+    if (!PAYSTACK_SECRET_KEY) {
+      return res.status(503).json({
+        message: 'Online payments are not configured yet.'
+      });
+    }
+
+    const reference = String(req.params.reference || '').trim();
+
+    if (!reference || reference.length > 200) {
+      return res.status(400).json({
+        message: 'A valid payment reference is required.'
+      });
+    }
+
+    const orders = getOrders();
+
+    const order = orders.find(
+      item => item.paymentReference === reference
+    );
+
+    if (!order) {
+      return res.status(404).json({
+        message: 'No order was found for this payment reference.'
+      });
+    }
+
+    // Never downgrade an order that has already been verified as paid.
+    if (order.paymentStatus === 'paid') {
+      return res.json({
+        verified: true,
+        paymentStatus: 'paid',
+        orderId: order.id
+      });
+    }
+
+    const paystackResponse = await fetch(
+      `https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`
+        }
+      }
+    );
+
+    const result = await paystackResponse.json();
+
+    if (!paystackResponse.ok || !result.status || !result.data) {
+      console.error('PAYSTACK VERIFY ERROR:', result);
+
+      return res.status(502).json({
+        message: 'Could not verify the payment with Paystack.'
+      });
+    }
+
+    const transaction = result.data;
+    const expectedAmount = Number(order.paystackAmount);
+
+    const amountMatches =
+      Number.isSafeInteger(expectedAmount) &&
+      Number(transaction.amount) === expectedAmount;
+
+    const currencyMatches = transaction.currency === 'GHS';
+    const referenceMatches = transaction.reference === reference;
+    const successful = transaction.status === 'success';
+
+    if (
+      !successful ||
+      !amountMatches ||
+      !currencyMatches ||
+      !referenceMatches
+    ) {
+      order.paymentStatus = successful
+        ? 'verification_failed'
+        : 'unpaid';
+
+      saveOrders(orders);
+
+      return res.status(400).json({
+        verified: false,
+        paymentStatus: order.paymentStatus,
+        message: 'Payment could not be confirmed for the expected amount and currency.'
+      });
+    }
+
+    order.paymentStatus = 'paid';
+    order.paymentMethod = 'Paystack';
+    order.paidAt = new Date().toISOString();
+
+    saveOrders(orders);
+
+    return res.json({
+      verified: true,
+      paymentStatus: 'paid',
+      orderId: order.id
+    });
+  } catch (error) {
+    console.error('PAYSTACK VERIFY ERROR:', error);
+
+    return res.status(500).json({
+      message: 'Could not verify the payment.'
+    });
+  }
+});
+
+// ===============================
+// START SERVER
+// ===============================
+
+const PORT = process.env.PORT || 3000;
+
+const server = app.listen(PORT, () => {
+  console.log(
+    `Krūde backend running on http://localhost:${PORT}`
+  );
+
+  console.log(
+    'Backend server is active and waiting for requests...'
+  );
+
+  console.log('Admin configuration path:', adminFile);
+});
+
+// ===============================
+// SERVER ERROR HANDLING
+// ===============================
+
+server.on('error', (error) => {
+  console.error('SERVER ERROR:', error);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('UNCAUGHT EXCEPTION:', error);
+});
+
+process.on('unhandledRejection', (error) => {
+  console.error('UNHANDLED REJECTION:', error);
+});
+
+process.on('exit', (code) => {
+  console.log('NODE PROCESS EXITED WITH CODE:', code);
+});
