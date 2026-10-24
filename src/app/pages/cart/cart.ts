@@ -1,35 +1,53 @@
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CartService, CartItem } from '../../services/cart';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-cart',
+  standalone: true,
   imports: [CommonModule, RouterLink],
   styleUrl: './cart.css',
   templateUrl: './cart.html',
 })
 export class Cart {
-  readonly backendUrl = environment.backendUrl;
 
   cartItems: CartItem[] = [];
 
   constructor(private cartService: CartService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.cartItems = this.cartService.getCartItems();
   }
 
-  increaseQuantity(id: number, size: string) {
+  getProductImage(image: string): string {
+    if (!image) {
+      return 'images/krude-logo.png';
+    }
+
+    if (image.startsWith('http')) {
+      return image;
+    }
+
+    const filename = image.split('/').pop();
+
+    return filename
+      ? `images/products/${filename}`
+      : 'images/krude-logo.png';
+  }
+
+  increaseQuantity(id: number, size: string): void {
     this.cartService.increaseQuantity(id, size);
+    this.cartItems = this.cartService.getCartItems();
   }
 
-  decreaseQuantity(id: number, size: string) {
+  decreaseQuantity(id: number, size: string): void {
     this.cartService.decreaseQuantity(id, size);
+    this.cartItems = this.cartService.getCartItems();
   }
 
-  removeItem(id: number, size: string) {
+  removeItem(id: number, size: string): void {
     this.cartService.removeFromCart(id, size);
     this.cartItems = this.cartService.getCartItems();
   }
@@ -37,5 +55,4 @@ export class Cart {
   getTotal(): number {
     return this.cartService.getTotal();
   }
-
 }

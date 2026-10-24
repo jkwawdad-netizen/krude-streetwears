@@ -208,9 +208,7 @@
 
 
             <img
-  [src]="product.image?.startsWith('http')
-    ? product.image
-    : backendUrl + product.image"
+  [src]="getProductImage(product.image)"
   [alt]="product.name"
 >
 

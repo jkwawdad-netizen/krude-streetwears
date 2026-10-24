@@ -48,6 +48,25 @@ export class Shop implements OnInit {
     this.loadProducts();
   }
 
+  // Use GitHub-hosted product photos for old /uploads/ image paths.
+  getProductImage(image: string): string {
+    if (!image) {
+      return 'images/krude-logo.png';
+    }
+
+    // Keep external image URLs unchanged.
+    if (image.startsWith('http')) {
+      return image;
+    }
+
+    // Extract the filename from paths such as /uploads/product.jpeg.
+    const filename = image.split('/').pop();
+
+    return filename
+      ? `images/products/${filename}`
+      : 'images/krude-logo.png';
+  }
+
   loadProducts(): void {
     this.isLoading = true;
     this.errorMessage = '';
@@ -55,17 +74,11 @@ export class Shop implements OnInit {
     this.productService
       .getProducts()
       .subscribe({
-
         next: (products: Product[]) => {
-          console.log(
-            'Shop products loaded:',
-            products
-          );
+          console.log('Shop products loaded:', products);
 
           this.products = products;
-
           this.isLoading = false;
-
           this.currentPage = 1;
 
           this.cdr.detectChanges();
@@ -84,7 +97,6 @@ export class Shop implements OnInit {
 
           this.cdr.detectChanges();
         }
-
       });
   }
 
@@ -94,13 +106,8 @@ export class Shop implements OnInit {
   }
 
   get filteredProducts(): Product[] {
-
-    const getShopCategory = (
-      category: string
-    ): string => {
-
-      const normalized =
-        category.trim().toUpperCase();
+    const getShopCategory = (category: string): string => {
+      const normalized = category.trim().toUpperCase();
 
       if (
         normalized === 'CROCS' ||
@@ -113,57 +120,39 @@ export class Shop implements OnInit {
     };
 
     if (this.selectedCategory === 'ALL') {
-
-      const categoryProducts =
-        new Map<string, Product>();
+      const categoryProducts = new Map<string, Product>();
 
       for (const product of this.products) {
-
-        const category =
-          getShopCategory(product.category);
-
-        const existing =
-          categoryProducts.get(category);
+        const category = getShopCategory(product.category);
+        const existing = categoryProducts.get(category);
 
         if (
           !existing ||
           product.id > existing.id
         ) {
-          categoryProducts.set(
-            category,
-            product
-          );
+          categoryProducts.set(category, product);
         }
       }
 
-      return Array.from(
-        categoryProducts.values()
-      );
+      return Array.from(categoryProducts.values());
     }
 
-    return this.products.filter(
-      product => {
+    return this.products.filter((product) => {
+      const shopCategory = getShopCategory(product.category);
 
-        const shopCategory =
-          getShopCategory(product.category);
-
-        return (
-          shopCategory ===
-          this.selectedCategory.toUpperCase()
-        );
-      }
-    );
+      return (
+        shopCategory ===
+        this.selectedCategory.toUpperCase()
+      );
+    });
   }
 
   get paginatedProducts(): Product[] {
-
     const startIndex =
-      (this.currentPage - 1) *
-      this.productsPerPage;
+      (this.currentPage - 1) * this.productsPerPage;
 
     const endIndex =
-      startIndex +
-      this.productsPerPage;
+      startIndex + this.productsPerPage;
 
     return this.filteredProducts.slice(
       startIndex,
@@ -172,7 +161,6 @@ export class Shop implements OnInit {
   }
 
   get totalPages(): number {
-
     return Math.ceil(
       this.filteredProducts.length /
       this.productsPerPage
@@ -180,7 +168,6 @@ export class Shop implements OnInit {
   }
 
   get pageNumbers(): number[] {
-
     return Array.from(
       { length: this.totalPages },
       (_, index) => index + 1
@@ -188,7 +175,6 @@ export class Shop implements OnInit {
   }
 
   goToPage(page: number): void {
-
     if (
       page < 1 ||
       page > this.totalPages
@@ -205,24 +191,15 @@ export class Shop implements OnInit {
   }
 
   quickAdd(product: Product): void {
-
     this.cartService.addToCart({
-
       id: product.id,
-
       name: product.name,
-
       price: product.price,
-
       image: product.image,
-
       size: product.sizes?.[0] || 'L',
-
       quantity: 1
-
     });
 
     alert('Added to cart!');
   }
-
 }

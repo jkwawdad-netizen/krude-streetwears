@@ -30,14 +30,11 @@
       >
 
         <div class="cart-image">
-          <img
-            [src]="item.image?.startsWith('http')
-              ? item.image
-              : backendUrl + item.image"
-            [alt]="item.name"
-          >
-        </div>
-
+  <img
+    [src]="getProductImage(item.image)"
+    [alt]="item.name"
+  >
+</div>
         <div class="cart-info">
 
           <div>
