@@ -1,4 +1,5 @@
 
+
 name: Deploy Krude Streetwears to GitHub Pages
 
 on:
@@ -17,8 +18,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,35 +34,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Angular app
+      - name: Build Angular website
         run: npm run build -- --base-href /krude-streetwears/
-
-      - name: Locate Angular build output
-        shell: bash
-        run: |
-          if [ -f dist/krude-streetwears/browser/index.html ]; then
-            echo "PUBLISH_DIR=dist/krude-streetwears/browser" >> "$GITHUB_ENV"
-          elif [ -f dist/krude-streetwears/index.html ]; then
-            echo "PUBLISH_DIR=dist/krude-streetwears" >> "$GITHUB_ENV"
-          else
-            echo "Could not find Angular index.html"
-            find dist -name index.html
-            exit 1
-          fi
-
-      - name: Support Angular page refreshes
-        run: cp "$PUBLISH_DIR/index.html" "$PUBLISH_DIR/404.html"
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Upload website
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ env.PUBLISH_DIR }}
+          path: dist/krude-streetwears/browser
 
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
