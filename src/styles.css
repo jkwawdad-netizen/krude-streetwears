@@ -1,1 +1,47 @@
-/* You can add global styles to this file, and also import other style files */
+
+/* GLOBAL MOBILE RESPONSIVENESS FIX */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+app-root {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: clip;
+  }
+
+  app-root {
+    overflow-x: clip;
+  }
+}
+/* * You can add global styles to this file, and also import other style files */ 
