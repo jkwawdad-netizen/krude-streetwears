@@ -1,3 +1,4 @@
+
 .footer {
   background: #111111;
   color: #ffffff;
@@ -7,17 +8,12 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 60px 30px;
-
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   gap: 60px;
 }
 
-
-/* =========================
-   BRAND
-========================= */
-
+/* BRAND */
 .footer-brand {
   display: flex;
   flex-direction: column;
@@ -25,25 +21,22 @@
 }
 
 .footer-logo {
-  width: 150px;
+  width: 90px;
+  max-width: 100%;
   height: auto;
   object-fit: contain;
-  margin-bottom: 20px;
+  display: block;
+  margin-bottom: 16px;
 }
 
 .footer-brand p {
   max-width: 350px;
   margin: 0;
-
   color: #bbbbbb;
   line-height: 1.7;
 }
 
-
-/* =========================
-   LINKS + CONTACT
-========================= */
-
+/* LINKS + CONTACT */
 .footer-links,
 .footer-contact {
   display: flex;
@@ -54,7 +47,6 @@
 .footer-links h3,
 .footer-contact h3 {
   margin: 0 0 8px;
-
   font-size: 17px;
   color: #ffd400;
 }
@@ -62,10 +54,7 @@
 .footer-links a {
   color: #bbbbbb;
   text-decoration: none;
-
-  transition:
-    color 0.3s ease,
-    transform 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .footer-links a:hover {
@@ -78,11 +67,7 @@
   color: #bbbbbb;
 }
 
-
-/* =========================
-   SOCIAL LINKS
-========================= */
-
+/* SOCIAL LINKS */
 .footer-socials {
   display: flex;
   gap: 18px;
@@ -92,12 +77,10 @@
 .footer-socials a {
   color: #ffffff;
   text-decoration: none;
-
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-
   transition: color 0.3s ease;
 }
 
@@ -105,20 +88,13 @@
   color: #ffd400;
 }
 
-
-/* =========================
-   FOOTER BOTTOM
-========================= */
-
+/* FOOTER BOTTOM */
 .footer-bottom {
   border-top: 1px solid #333333;
-
   padding: 20px 30px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   color: #999999;
   font-size: 14px;
 }
@@ -131,13 +107,8 @@
   color: #ffd400;
 }
 
-
-/* =========================
-   MOBILE
-========================= */
-
+/* MOBILE */
 @media (max-width: 768px) {
-
   .footer-container {
     grid-template-columns: 1fr;
     gap: 35px;
@@ -145,24 +116,18 @@
   }
 
   .footer-logo {
-    width: 130px;
+    width: 75px;
   }
 
   .footer-bottom {
     padding: 20px;
-
     flex-direction: column;
     gap: 10px;
-
     text-align: center;
   }
 }
 
-
-/* =========================
-   GLOBAL RESET
-========================= */
-
+/* GLOBAL RESET */
 html,
 body {
   margin: 0;
