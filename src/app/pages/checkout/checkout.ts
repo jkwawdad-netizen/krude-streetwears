@@ -40,6 +40,7 @@ export class Checkout {
 
   isSubmitting = false;
   orderSubmitted = false;
+  private readonly apiUrl = environment.apiUrl;
 
   constructor() {
     this.loadCart();
@@ -152,8 +153,44 @@ export class Checkout {
         throw new Error(result.message || 'Could not submit your order.');
       }
 
-      const order = result.order;
-      this.orderSubmitted = true;
+      
+const order = result.order;
+
+// Paystack checkout
+if (this.paymentMethod === 'Paystack') {
+  try {
+    const paymentResponse = await fetch(
+      `${this.apiUrl}/payments/paystack/initialize`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId: order.id,
+        }),
+      }
+    );
+
+    const paymentResult = await paymentResponse.json();
+
+    if (!paymentResponse.ok || !paymentResult.authorizationUrl) {
+      throw new Error(
+        paymentResult.message || 'Could not initialize Paystack payment.'
+      );
+    }
+
+    this.orderSubmitted = true;
+    window.location.href = paymentResult.authorizationUrl;
+    return;
+  } catch (paymentError) {
+    console.error('PAYSTACK INITIALIZATION ERROR:', paymentError);
+    throw paymentError;
+  }
+}
+
+this.orderSubmitted = true;
+
 
       const customerName =
         `${this.customer.firstName.trim()} ${this.customer.lastName.trim()}`;

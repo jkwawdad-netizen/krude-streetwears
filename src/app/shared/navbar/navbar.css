@@ -18,7 +18,6 @@
 }
 
 /* KRŪDE LOGO */
-
 .logo {
   display: flex;
   align-items: center;
@@ -54,7 +53,6 @@
     max-height: 24px;
   }
 }
-
 
 /* BRAND NAME */
 .brand-name {
@@ -120,7 +118,6 @@
   transition: transform 0.3s ease;
 }
 
-/* HOVER */
 .nav-links a:hover {
   color: #111111;
   transform: translateY(-2px);
@@ -130,7 +127,7 @@
   transform: scaleX(1);
 }
 
-/* MOBILE BUTTON */
+/* MOBILE MENU BUTTON */
 .menu-btn {
   display: none;
   border: none;
@@ -139,7 +136,7 @@
   cursor: pointer;
 }
 
-/* MOBILE */
+/* MOBILE NAVIGATION */
 @media (max-width: 768px) {
   .nav-links {
     display: none;
@@ -184,4 +181,140 @@
     max-width: 42px;
     max-height: 24px;
   }
+}
+
+/* CART COUNT BADGE */
+.nav-links a.cart-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.cart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #ffd400;
+  color: #111111;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* CART ICON AND MENU CONTROLS */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.mobile-cart {
+  display: none;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #111111;
+}
+
+.cart-icon {
+  display: block;
+  width: 26px;
+  height: 26px;
+  font-size: 23px;
+  line-height: 1;
+  color: #111111;
+  flex-shrink: 0;
+}
+
+.mobile-cart .cart-badge {
+  position: absolute;
+  top: -10px;
+  right: -12px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: 11px;
+}
+
+/* MOBILE CART ALWAYS VISIBLE */
+@media (max-width: 768px) {
+  .nav-actions {
+    display: flex !important;
+    align-items: center;
+    gap: 20px;
+    margin-left: auto;
+  }
+
+  .mobile-cart {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    color: #111111;
+    text-decoration: none;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .mobile-cart .cart-icon {
+    display: block !important;
+    width: 26px !important;
+    height: 26px !important;
+    color: #111111 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+
+  .nav-links .desktop-cart {
+    display: inline-flex;
+  }
+
+  .nav-links.active a.cart-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+/* Force the mobile cart icon to display */
+.mobile-cart {
+  display: inline-flex !important;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: #111 !important;
+  text-decoration: none;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.mobile-cart .cart-icon {
+  display: block !important;
+  width: 26px !important;
+  height: 26px !important;
+  color: #111 !important;
+  stroke: #111;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0;
+}
+
+.mobile-cart .cart-badge {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  z-index: 5;
 }

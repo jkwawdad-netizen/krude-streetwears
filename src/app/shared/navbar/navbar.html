@@ -11,12 +11,42 @@
       <a routerLink="/shop" (click)="menuOpen = false">Shop</a>
       <a routerLink="/about" (click)="menuOpen = false">About</a>
       <a routerLink="/contact" (click)="menuOpen = false">Contact</a>
-      <a routerLink="/cart" (click)="menuOpen = false">Cart</a>
+
+      <a
+        routerLink="/cart"
+        class="cart-link desktop-cart"
+        (click)="menuOpen = false"
+        aria-label="Shopping cart"
+      >
+        Cart
+        <span class="cart-badge">{{ cartCount$ | async }}</span>
+      </a>
     </div>
 
-    <button class="menu-btn" (click)="toggleMenu()">
-      ☰
-    </button>
+    <div class="nav-actions">
+      <a
+        routerLink="/cart"
+        class="mobile-cart"
+        aria-label="Shopping cart"
+      >
+        <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M3 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L22 7H6"
+        fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="21" r="1.3" fill="currentColor"/>
+  <circle cx="18" cy="21" r="1.3" fill="currentColor"/>
+</svg>
+        <span class="cart-badge">{{ cartCount$ | async }}</span>
+      </a>
+
+      <button
+        class="menu-btn"
+        (click)="toggleMenu()"
+        aria-label="Toggle navigation menu"
+      >
+        ☰
+      </button>
+    </div>
 
   </div>
 </nav>

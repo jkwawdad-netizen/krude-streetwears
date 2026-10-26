@@ -1,18 +1,25 @@
+
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
+import { CartService } from '../../services/cart';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink],
+  standalone: true,
+  imports: [RouterLink, AsyncPipe],
   styleUrl: './navbar.css',
   templateUrl: './navbar.html',
 })
 export class Navbar {
-
   menuOpen = false;
+  cartCount$;
 
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
+  constructor(private cartService: CartService) {
+    this.cartCount$ = this.cartService.cartCount$;
   }
 
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
 }
