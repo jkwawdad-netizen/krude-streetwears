@@ -24,6 +24,7 @@
   width: 90px;
   max-width: 100%;
   height: auto;
+  max-height: 90px;
   object-fit: contain;
   display: block;
   margin-bottom: 16px;
@@ -117,6 +118,7 @@
 
   .footer-logo {
     width: 75px;
+    max-height: 75px;
   }
 
   .footer-bottom {
