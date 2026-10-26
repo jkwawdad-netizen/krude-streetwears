@@ -933,17 +933,29 @@ app.post('/api/admin/login', (req, res) => {
       });
     }
 
-    if (!fs.existsSync(adminFile)) {
-      console.error('ADMIN FILE NOT FOUND:', adminFile);
+    let admin;
+
+    // Use Render environment variables in production.
+    if (
+      process.env.ADMIN_USERNAME &&
+      process.env.ADMIN_PASSWORD_HASH
+    ) {
+      admin = {
+        username: process.env.ADMIN_USERNAME,
+        password: process.env.ADMIN_PASSWORD_HASH
+      };
+    } else if (fs.existsSync(adminFile)) {
+      // Use the local configuration file during development.
+      admin = JSON.parse(
+        fs.readFileSync(adminFile, 'utf8')
+      );
+    } else {
+      console.error('Admin configuration is missing.');
 
       return res.status(500).json({
-        message: 'Admin configuration file was not found'
+        message: 'Admin configuration is missing'
       });
     }
-
-    const admin = JSON.parse(
-      fs.readFileSync(adminFile, 'utf8')
-    );
 
     if (username !== admin.username) {
       return res.status(401).json({
@@ -968,25 +980,23 @@ app.post('/api/admin/login', (req, res) => {
         role: 'admin'
       },
       JWT_SECRET,
-      {
-        expiresIn: '8h'
-      }
+      { expiresIn: '8h' }
     );
 
-    res.json({
-      message: 'Login successful',
-      token: token,
+    return res.json({
+  message: 'Login successful',
+  token: token,
+  admin: {
+    username: admin.username,
+    role: 'admin'
+  }
+});
 
-      admin: {
-        username: admin.username,
-        role: 'admin'
-      }
-    });
   } catch (error) {
-    console.error('ADMIN LOGIN ERROR:', error);
+    console.error('Admin login error:', error.message);
 
-    res.status(500).json({
-      message: 'Admin login failed. Check the backend terminal.'
+    return res.status(500).json({
+      message: 'Unable to log in'
     });
   }
 });
