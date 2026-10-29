@@ -1,0 +1,104 @@
+
+.payment-page {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 20px;
+  background: #f8f8f6;
+  color: #171717;
+}
+
+.payment-card {
+  width: 100%;
+  max-width: 540px;
+  padding: 48px 32px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e6e6e2;
+}
+
+.brand-label {
+  margin: 0 0 36px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+
+.status-symbol {
+  width: 66px;
+  height: 66px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 24px;
+  border: 1px solid #d6d6d0;
+  border-radius: 50%;
+  font-size: 32px;
+}
+
+.status-symbol.success {
+  color: #236b38;
+  border-color: #236b38;
+}
+
+.status-symbol.failed {
+  color: #a33232;
+  border-color: #a33232;
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+}
+
+.payment-card h1 {
+  margin: 14px 0;
+  font-size: clamp(26px, 5vw, 38px);
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.message {
+  max-width: 410px;
+  margin: 0 auto 28px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.order-number {
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.primary-button {
+  display: block;
+  padding: 16px 20px;
+  background: #171717;
+  color: #fff;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.primary-button:hover {
+  background: #d6e638;
+  color: #171717;
+}
+
+.secondary-link {
+  display: inline-block;
+  margin-top: 22px;
+  color: #333;
+  font-size: 13px;
+  text-underline-offset: 4px;
+}
+
+.support-note {
+  margin: 24px 0 0;
+  color: #8b3434;
+  font-size: 12px;
+  line-height: 1.6;
+}
