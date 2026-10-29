@@ -430,3 +430,70 @@
   }
 
 }
+
+/* MOBILE OVERFLOW FIX — CHECKOUT */
+@media (max-width: 600px) {
+  .checkout-page {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .checkout-header {
+    padding: 65px 6vw 55px;
+  }
+
+  .checkout-header h1 {
+    max-width: 100%;
+    font-size: clamp(38px, 11vw, 60px);
+    line-height: 0.9;
+    letter-spacing: -2px;
+    overflow-wrap: break-word;
+  }
+
+  .checkout-content {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding: 50px 6vw 70px;
+  }
+
+  .customer-details,
+  .order-summary {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .order-summary {
+    padding: 20px;
+  }
+
+  .summary-product {
+    grid-template-columns: 60px minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .summary-product img {
+    width: 60px;
+    height: 75px;
+  }
+
+  .checkout-statement {
+    min-height: auto;
+    padding: 65px 6vw;
+  }
+
+  .checkout-statement h2 {
+    max-width: 100%;
+    font-size: clamp(38px, 11vw, 60px);
+    line-height: 0.9;
+    letter-spacing: -2px;
+    overflow-wrap: break-word;
+  }
+
+  .place-order {
+    gap: 12px;
+    padding: 16px;
+    letter-spacing: 1px;
+  }
+}
